@@ -13,6 +13,14 @@ It's a great day!
 
 <br />
 
+<Accordion title="My Accordion Title" icon="fa-info-circle">
+  Lorem ipsum dolor sit amet, **consectetur adipiscing elit.** Ut enim
+  ad minim veniam, quis nostrud exercitation ullamco. Excepteur sint
+  occaecat cupidatat non proident!
+</Accordion>
+
+<br />
+
 Defaults: <MethodPill type="POST" /> | <MethodPill type="GET" /> | <MethodPill type="PUT" /> | <MethodPill type="Delete" />
 
 Custom background & text: <MethodPill type="SYNC" bg="#8b5cf6" color="#ffffff" />
