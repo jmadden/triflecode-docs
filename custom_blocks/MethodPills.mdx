@@ -1,0 +1,42 @@
+---
+name: MethodPills
+---
+export const MethodPill = ({ type, bg, color, radius }) => {
+  const defaultColors = {
+    POST: { bg: '#0372c2', color: '#ffffff' },   // ReadMe blue
+    GET: { bg: '#0d9b71', color: '#ffffff' },    // ReadMe green
+    PUT: { bg: '#684ead', color: '#ffffff' },  // ReadMe purple
+    DELETE: { bg: '#c61c29', color: '#ffffff' }, // ReadMe red
+  };
+
+  const resolvedColors = defaultColors[type?.toUpperCase()] || {
+    bg: '#e5e7eb',    // gray-200
+    color: '#000000', // black
+  };
+
+  const style = {
+    backgroundColor: bg || resolvedColors.bg,
+    color: color || resolvedColors.color,
+    borderRadius: radius || '9999px', // fully rounded pill by default
+  };
+
+  return (
+    <span
+      style={style}
+      className="inline-block px-2 py-1 text-xs font-bold font-mono"
+    >
+      {type}
+    </span>
+  );
+};
+
+Defaults: <MethodPill type="POST" /> | <MethodPill type="GET" /> | <MethodPill type="PUT" /> | <MethodPill type="Delete" />
+
+Custom background & text: <MethodPill type="SYNC" bg="#8b5cf6" color="#ffffff" />
+
+Custom roundness: <MethodPill type="GET" radius="6px" />
+
+Completely custom: <MethodPill type="MAGIC" bg="#fffb00" color="#000" radius="0.5rem" />
+
+
+<MethodPill type="text here" bg="hex color (optional)" color="hex color (optional)" radius="px value here (optional)" />
