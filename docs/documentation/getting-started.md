@@ -11,6 +11,18 @@ You're on your way to building an awesome developer hub! Here's some of the thin
 
 It's a great day!
 
+<br />
+
+Defaults: <MethodPill type="POST" /> | <MethodPill type="GET" /> | <MethodPill type="PUT" /> | <MethodPill type="Delete" />
+
+Custom background & text: <MethodPill type="SYNC" bg="#8b5cf6" color="#ffffff" />
+
+Custom roundness: <MethodPill type="GET" radius="6px" />
+
+Completely custom: <MethodPill type="MAGIC" bg="#fffb00" color="#000" radius="0.5rem" />
+
+<MethodPill type="text here" bg="hex color (optional)" color="hex color (optional)" radius="px value here (optional)" />
+
 # 📝 Customize your docs
 
 What you're looking at right now is what we call our **Guides**. It's a free-form place to write to your heart's content! And the best part is... you aren't alone! Your users can contribute (with your approval, don't worry!) using the **[Suggested Edits](https://docs.readme.com/main/docs/suggested-edits)** feature on every page. It's like GitHub Pull Requests, but for text!
