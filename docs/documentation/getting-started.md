@@ -4,16 +4,12 @@ excerpt: >-
   This page will help you get started with Triflecode Docs. You'll be up and
   running in a jiffy!
 hidden: false
+link:
+  new_tab: false
 ---
 Welcome to ReadMe! :owlbert:
 
 You're on your way to building an awesome developer hub! Here's some of the things you'll want to check out.
-
-It's a great day!
-
-This document is the best!
-
-No it's not!
 
 <Accordion title="My Accordion Title" icon="fa-info-circle">
   Lorem ipsum dolor sit amet, **consectetur adipiscing elit.** Ut enim
@@ -59,5 +55,3 @@ One of the best ways to know if you're nailing the dev experience is checking ou
 ReadMe has a *ton* of ways to make your docs the envy of any <Glossary>parliament</Glossary> (like that mouseover!). If you get stuck, [shoot us an email](mailto:support@readme.io) or use the Intercom widget on the bottom right of any page.
 
 We're excited you're here! :blue_heart:
-
-![This won't be fun to clean up...](https://owlbert.io/images/popper.gif)
