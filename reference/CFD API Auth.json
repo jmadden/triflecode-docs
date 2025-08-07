@@ -1,0 +1,179 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "v1",
+    "title": "AUTHENTICATION",
+    "license": {
+      "name": "Mitek Identity Server License",
+      "url": "https://www.miteksystems.com/legal/terms-of-use"
+    },
+    "description": "The Mitek Identity Server is used to provide OAuth v2 Authorization and OpenId Connect authentication for use in the Mitek Cloud. We support both the Client Credential flow for application to application communication and the Implicit flow for User authentication and authorization. You can find out more about OAuth v2 and the flows Mitek uses at [https://oauth.net/2/](https://oauth.net/2/).\n\n# Scopes\n\nScopes are the resources you are trying to access on the Mitek Cloud. You can think of them like permissions that you want the token you are requesting to have. You should only request the scopes that you need for a given token, even if you have more scopes available to you. For example, if you have the Identity Vault and Mobile Verify, you have access to `dossier.creator` and `vault.reader`. Even though both scopes are available to you, it is unlikely that your client needs the ability to submit new dossiers and the ability to retrieve data from the vault at the same time. Therefore, you should only request the scope you are trying to use with that request.\n\n# Clients\n\nClients are applications that talk to Mitek's applications. A Tenant in Mitek can have many clients, if they have many applications that are submitting Dossiers to the Mitek Cloud. They are different from users and should only be used to give an application capable of keeping a secret permissions to Mitek Cloud.\n"
+  },
+  "servers": [
+    {
+      "url": "https://my.mobiledeposit.com",
+      "description": "Real-Time API Authentication Server"
+    }
+  ],
+  "paths": {
+    "/auth/connect/token": {
+      "post": {
+        "tags": [
+          "Retrieve Access Token"
+        ],
+        "summary": "Retrieve access token using client credentials",
+        "description": "Use the token endpoint to retrieve a token for the client credential flow. Submit your client_id, client_secret, and the scopes that you’ll need the token to be able to access, and, CFD will return an access token with a specific lifetime (in the expires_in property in the response). CFD adds this token as a Bearer token in the Authorization header of any request going to the Mitek Cloud.",
+        "operationId": "token",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "client_id",
+                  "client_secret",
+                  "grant_type",
+                  "scope"
+                ],
+                "properties": {
+                  "client_id": {
+                    "type": "string",
+                    "description": "Your client ID issued by Mitek"
+                  },
+                  "client_secret": {
+                    "type": "string",
+                    "description": "Your client secret issued by Mitek"
+                  },
+                  "grant_type": {
+                    "type": "string",
+                    "enum": [
+                      "client_credentials"
+                    ]
+                  },
+                  "scope": {
+                    "type": "string",
+                    "description": "Space-delimited list of scopes the access_token should have"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/tokenResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "Either malformed request or invalid client_id"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "{Error Message}"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "x-code-samples": [
+          {
+            "lang": "curl",
+            "source": "POST https://my.mobiledeposit.com/auth/connect/token HTTP/1.1\nHost: my.mobiledeposit.com\nContent-Type: application/x-www-form-urlencoded\n\ngrant_type=client_credentials&client_id=YOUR_CLIENT_ID&client_secret=YOUR_SECRET&scope=mitek.cfd.realtime.api"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "tokenResponse": {
+        "type": "object",
+        "required": [
+          "access_token",
+          "expires_in",
+          "token_type"
+        ],
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "description": "Your access token in JWT format",
+            "example": "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Im..."
+          },
+          "expires_in": {
+            "type": "number",
+            "description": "The number of seconds the token is valid for",
+            "example": 300
+          },
+          "token_type": {
+            "type": "string",
+            "enum": [
+              "Bearer"
+            ]
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://my.mobiledeposit.com/auth/connect/token",
+            "scopes": {
+              "mitek.cfd.realtime.api": "Access CFD Real-Time API"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "oauth2": [
+        "mitek.cfd.realtime.api"
+      ]
+    }
+  ],
+  "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true,
+    "oauth-options": {
+      "useInsecureClientAuthentication": true,
+      "scopeSeparator": " "
+    }
+  }
+}
