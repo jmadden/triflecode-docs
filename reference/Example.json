@@ -1,0 +1,325 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "OAuth2 API",
+    "description": "API for OAuth 2.0 implementation to authenticate to Mitek APIs",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://{region}.id.miteksystems.com/api",
+      "variables": {
+        "region": {
+          "default": "eu-west",
+          "enum": [
+            "eu",
+            "eu-west",
+            "us-west",
+            "ca-central",
+            "uk-south"
+          ]
+        }
+      }
+    }
+  ],
+  "tags": [
+    {
+      "name": "OAuth2",
+      "description": "OAuth2 authentication endpoints"
+    },
+    {
+      "name": "OAuth2 JWT",
+      "description": "OAuth2 JWT authentication endpoints"
+    }
+  ],
+  "paths": {
+    "/oauth2/token": {
+      "post": {
+        "tags": [
+          "OAuth2"
+        ],
+        "summary": "Generate OAuth2/OAuth2 JWT token",
+        "description": "This is an authentication protocol in which the client authenticates itself to Mitek API in two phases: request token with Mitek credentials and then use it in further Mitek API calls",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Oauth2Request"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success. Proved access token. Use the returned token in header of subsequent API calls (Authorization: Bearer &lt;token&gt;)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Oauth2Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse400"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse401"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth2/jwks.json": {
+      "get": {
+        "tags": [
+          "OAuth2 JWT"
+        ],
+        "summary": "Validate provided token",
+        "description": "In case that Mitek generates an OAuth2 JWT token, the client is able to validate that token if needed by calling to the endpoint",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JKSResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Oauth2Request": {
+        "type": "object",
+        "required": [
+          "client_id",
+          "client_secret",
+          "grant_type",
+          "scope"
+        ],
+        "properties": {
+          "client_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Client ID can be found on Mivip Console in Account > Global Developer Settings"
+          },
+          "client_secret": {
+            "type": "string",
+            "description": "Client ID can be on Mivip Console in Account > Global Developer Settings",
+            "example": "ec1a88111100111b7a0f1efaca000c2a1"
+          },
+          "grant_type": {
+            "type": "string",
+            "description": "The value to provide should be: client_credentials",
+            "enum": [
+              "client_credentials"
+            ]
+          },
+          "scope": {
+            "type": "string",
+            "description": "A space separated value, which is related to the APIs which are going to be using the generated token from the OAuth2.0 API. Scopes can be: documents,requests,face,video,signature,mipass,attachments,client,config,data,fraud-history,address-lookup",
+            "example": "documents face"
+          },
+          "client_assertion_type": {
+            "type": "string",
+            "description": "Type of certificate assertion. It is required ONLY for private key JWT authentication.",
+            "enum": [
+              "urn:ietf:params:oauth:client-assertion-type:jwt-bearer"
+            ]
+          },
+          "client_assertion": {
+            "type": "string",
+            "description": "Client signed token. It is required ONLY for private key JWT authentication."
+          }
+        }
+      },
+      "Oauth2Response": {
+        "type": "object",
+        "required": [
+          "access_token",
+          "token_type",
+          "expires_in",
+          "scope"
+        ],
+        "example": {
+          "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+          "token_type": "Bearer",
+          "expires_in": 3600,
+          "scope": "documents,requests,face"
+        },
+        "properties": {
+          "access_token": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Client ID can be found on Mivip Console in Account > Global Developer Settings"
+          },
+          "token_type": {
+            "type": "string",
+            "description": "It will return \"Bearer\"",
+            "enum": [
+              "Bearer"
+            ]
+          },
+          "expires_in": {
+            "type": "integer",
+            "description": "Value indicating after how many seconds the token expires"
+          },
+          "scope": {
+            "type": "string",
+            "description": "A comma separated value, same as passed in the token request",
+            "example": "documents,face"
+          }
+        }
+      },
+      "ErrorResponse400": {
+        "type": "object",
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "invalid_request",
+              "unsupported_grant_type",
+              "invalid_scope",
+              "invalid_request"
+            ]
+          },
+          "error_description": {
+            "type": "string",
+            "enum": [
+              "Missing grant type",
+              "Unsupported grant type",
+              "Missing scope",
+              "Invalid scope",
+              "Bad client assertion type",
+              ""
+            ]
+          }
+        }
+      },
+      "ErrorResponse401": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "invalid_client"
+            ]
+          },
+          "error_description": {
+            "type": "string",
+            "enum": [
+              "Wrong credentials"
+            ]
+          }
+        }
+      },
+      "JKSResponse": {
+        "type": "object",
+        "properties": {
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kty": {
+                  "type": "string"
+                },
+                "use": {
+                  "type": "string"
+                },
+                "crv": {
+                  "type": "string"
+                },
+                "kid": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "x": {
+                  "type": "string"
+                },
+                "y": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "oauth2": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "https://{region}.id.miteksystems.com/api/oauth2/token",
+            "scopes": {
+              "documents": "Access document endpoints",
+              "requests": "Access request endpoints",
+              "face": "Access face endpoints",
+              "video": "Access video endpoints",
+              "signature": "Access signature endpoints",
+              "mipass": "Access MiPass endpoints",
+              "attachments": "Access attachments endpoints",
+              "client": "Access client endpoints",
+              "config": "Access config endpoints",
+              "data": "Access data endpoints",
+              "fraud-history": "Access fraud-history endpoints",
+              "address-lookup": "Access address-lookup endpoints"
+            }
+          }
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "oauth2": [
+        "documents",
+        "requests",
+        "face",
+        "video",
+        "signature",
+        "mipass",
+        "attachments",
+        "client",
+        "config",
+        "data",
+        "fraud-history",
+        "address-lookup"
+      ]
+    }
+  ],
+  "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true,
+    "oauth-options": {
+      "useInsecureClientAuthentication": true,
+      "scopeSeparator": ","
+    }
+  }
+}
