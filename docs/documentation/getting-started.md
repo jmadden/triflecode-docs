@@ -17,7 +17,7 @@ You're on your way to building an awesome developer hub! Here's some of the thin
   occaecat cupidatat non proident!
 </Accordion>
 
-<br />
+Changes.
 
 Defaults: <MethodPill type="POST" /> | <MethodPill type="GET" /> | <MethodPill type="PUT" /> | <MethodPill type="Delete" />
 
