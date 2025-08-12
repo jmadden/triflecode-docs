@@ -60,6 +60,6 @@ We're excited you're here! :blue_heart:
 
 <br />
 
-<br />
-
-<div id="ozmo-root" />
+<HTMLBlock>{`
+<div id="ozmo-root"></div>
+`}</HTMLBlock>
