@@ -29,6 +29,23 @@ Completely custom: <MethodPill type="MAGIC" bg="#fffb00" color="#000" radius="0.
 
 <br />
 
+<br />
+
+<HTMLBlock>{`
+<div style="position:relative;width:100%;height:80vh;max-height:900px;">
+  <iframe
+    src="https://boost.sds.modeaondemand.com/en-us/tutorial/app-boostmobile-ios-smartphone/3.0.23/feature_sign_in-signing-in-to-your-account/"
+    title="Boost Mobile – Signing in to your account"
+    style="position:absolute;inset:0;border:0;width:100%;height:100%;"
+    loading="lazy"
+    referrerpolicy="no-referrer"
+    allow="clipboard-read; clipboard-write"
+  ></iframe>
+</div>
+`}</HTMLBlock>
+
+<br />
+
 Changes.
 
 Defaults: <MethodPill type="POST" /> | <MethodPill type="GET" /> | <MethodPill type="PUT" /> | <MethodPill type="Delete" />
