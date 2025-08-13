@@ -11,23 +11,7 @@ Welcome to ReadMe! :owlbert:
 
 You're on your way to building an awesome developer hub! Here's some of the things you'll want to check out.
 
-\<Accordion title="My Accordion Title" icon="fa-info-circle">
-
-
-<HTMLBlock>{`
-<div style="position:relative;width:100%;height:80vh;max-height:900px;">
-  <iframe
-    src="https://boost.sds.modeaondemand.com/en-us/tutorial/app-boostmobile-ios-smartphone/3.0.23"
-    title="Boost Mobile – Signing in to your account"
-    style="position:absolute;inset:0;border:0;width:100%;height:100%;"
-    loading="lazy"
-    referrerpolicy="no-referrer"
-    allow="clipboard-read; clipboard-write"
-  ></iframe>
-</div>
-`}</HTMLBlock>
-
-\</Accordion>
+<br />
 
 Defaults: <MethodPill type="POST" /> | <MethodPill type="GET" /> | <MethodPill type="PUT" /> | <MethodPill type="Delete" />
 
