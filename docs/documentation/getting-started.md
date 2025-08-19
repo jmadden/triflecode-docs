@@ -19,7 +19,7 @@ You're on your way to building an awesome developer hub! Here's some of the thin
 
 <br />
 
-<br />
+what tha
 
 <br />
 
