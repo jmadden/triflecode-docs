@@ -7,7 +7,7 @@ hidden: false
 link:
   new_tab: false
 ---
-Welcome to ReadMe! :owlbert:
+Welcome to ReadMe! :owlbert: Yaa!
 
 You're on your way to building an awesome developer hub! Here's some of the things you'll want to check out.
 
