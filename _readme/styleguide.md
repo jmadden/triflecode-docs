@@ -1,0 +1,1 @@
+Pages should avoid fragmented sentences.
