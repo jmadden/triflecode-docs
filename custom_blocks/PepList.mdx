@@ -2,10 +2,8 @@
 name: PepList
 ---
 export const PepList = (props) => {
-  // Pull React hooks off the global in MDX
-  const useState = React.useState;
-  const useMemo = React.useMemo;
-  const useEffect = React.useEffect;
+  const { useState, useMemo, useEffect } = React; // React is in MDX global scope
+
 
   // Props (don’t use default params—keep acorn happy)
   const dataId = props && props.dataId ? props.dataId : 'pep-data';
