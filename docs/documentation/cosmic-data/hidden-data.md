@@ -5,7 +5,7 @@ hidden: false
 metadata:
   robots: index
 ---
-<PepList header="Watchlist Sources" />
+<PepList header="pep-data" />
 
 <HTMLBlock>{`
 <pre id="pep-data" class="pep-hidden" className="pep-hidden" data-encoding="json">[
