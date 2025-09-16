@@ -1,132 +1,285 @@
 ---
 name: PepList
 ---
-export const PepList = ({ header = "Watchlist Sources", dataId = "pep-data", rows }) => {
-  const { useState, useMemo, useEffect } = React; // React is in MDX global scope
+export const PepList = (props) => {
+  // Pull React hooks off the global in MDX
+  const useState = React.useState;
+  const useMemo = React.useMemo;
+  const useEffect = React.useEffect;
 
-  // Demo rows so preview always renders
-  const DEMO_ROWS = [
-    { "List Name": "OFAC SDN List", Country: "United States", Region: "North America", Tier: "Standard" },
-    { "List Name": "Canada OSFI Entity List", Country: "Canada", Region: "North America", Tier: "Plus/Premium" },
-    { "List Name": "EU Consolidated Sanctions", Country: "EU", Region: "Europe", Tier: "Plus/Premium" },
+  // Props (don’t use default params—keep acorn happy)
+  const dataId = props && props.dataId ? props.dataId : 'pep-data';
+  const rowsProp = props && props.rows ? props.rows : null;
+  const header = props && props.header ? props.header : 'Watchlist Sources';
+
+  // Demo rows for preview (arrays avoid spaced keys in literals)
+  const DEMO_ROWS_ARRAY = [
+    ['OFAC SDN List', 'United States', 'North America', 'Standard'],
+    ['Canada OSFI Entity List', 'Canada', 'North America', 'Plus/Premium'],
+    ['EU Consolidated Sanctions', 'European Union', 'Europe', 'Plus/Premium'],
   ];
 
-  function normalize(parsed) {
-    if (!parsed) return [];
+  function normalizeRows(parsed) {
+    var arr;
     if (Array.isArray(parsed)) {
-      return parsed.map(r =>
-        Array.isArray(r)
-          ? { "List Name": r[0], Country: r[1], Region: r[2], Tier: r[3] }
-          : {
-              "List Name": r.l || r["List Name"] || "",
-              Country: r.c || r.Country || "",
-              Region: r.r || r.Region || "",
-              Tier: r.t || r.Tier || "",
-            }
-      );
+      arr = parsed;
+    } else if (parsed && Array.isArray(parsed.rows)) {
+      arr = parsed.rows;
+    } else {
+      arr = [];
     }
-    return [];
+    var out = [];
+    for (var i = 0; i < arr.length; i++) {
+      var row = arr[i];
+      if (Array.isArray(row)) {
+        var l = row[0], c = row[1], r = row[2], t = row[3];
+        out.push({ 'List Name': l || '', Country: c || '', Region: r || '', Tier: t || '' });
+      } else if (row && typeof row === 'object') {
+        if ('l' in row || 'c' in row || 'r' in row || 't' in row) {
+          out.push({
+            'List Name': row.l ? row.l : '',
+            Country: row.c ? row.c : '',
+            Region: row.r ? row.r : '',
+            Tier: row.t ? row.t : '',
+          });
+        } else {
+          out.push({
+            'List Name': row['List Name'] ? row['List Name'] : '',
+            Country: row.Country ? row.Country : '',
+            Region: row.Region ? row.Region : '',
+            Tier: row.Tier ? row.Tier : '',
+          });
+        }
+      }
+    }
+    return out;
   }
 
-  function readHidden(id) {
-    if (typeof document === "undefined") return null;
-    const el = document.getElementById(id);
+  function readHiddenData(id) {
+    if (typeof document === 'undefined') return null;
+    var el = document.getElementById(id);
     if (!el) return null;
     try {
-      const raw = el.textContent || "";
+      var encoding = el.getAttribute('data-encoding') || 'json';
+      var raw = el.textContent || '';
+      if (encoding === 'base64json') raw = atob(raw.replace(/\s+/g, ''));
       return JSON.parse(raw);
     } catch (e) {
-      console.warn("PepList: parse failed", e);
+      console.warn('PepList: failed to parse hidden data', e);
       return null;
     }
   }
 
-  const [rowData, setRowData] = useState(() =>
-    rows ? normalize(rows) : DEMO_ROWS
-  );
+  // Start with demo so preview always shows something
+  const [rows, setRows] = useState(function () {
+    if (rowsProp) {
+      var n0 = normalizeRows(rowsProp);
+      if (n0.length) return n0;
+    }
+    return normalizeRows(DEMO_ROWS_ARRAY);
+  });
 
-  useEffect(() => {
-    if (rows) return; // prop wins
-    const parsed = readHidden(dataId);
-    if (parsed) setRowData(normalize(parsed));
-  }, [rows, dataId]);
+  // After mount, try to override from <pre id="pep-data">…</pre>.
+  useEffect(function () {
+    if (rowsProp) return; // prop wins
+    var attempts = 0;
+    var timer = null;
+    function tryLoad() {
+      attempts += 1;
+      var parsed = readHiddenData(dataId);
+      var n = parsed ? normalizeRows(parsed) : null;
+      if (n && n.length) {
+        setRows(n);
+        return;
+      }
+      if (attempts < 10) {
+        timer = setTimeout(tryLoad, attempts < 3 ? 0 : 100);
+      }
+    }
+    tryLoad();
+    return function cleanup() { if (timer) clearTimeout(timer); };
+  }, [dataId, rowsProp]);
 
-  const [activeRegion, setActiveRegion] = useState("All Regions");
-  const [searchTerm, setSearchTerm] = useState("");
+  // UI state
+  const [activeRegion, setActiveRegion] = useState('All Regions');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const regionOptions = useMemo(() => {
-    const seen = {};
-    rowData.forEach(r => { if (r.Region) seen[r.Region] = true; });
-    return ["All Regions"].concat(Object.keys(seen).sort());
-  }, [rowData]);
+  // Regions
+  const regionOptions = useMemo(function () {
+    var seen = {};
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i] && rows[i].Region ? rows[i].Region : null;
+      if (r) seen[r] = true;
+    }
+    var list = Object.keys(seen).sort();
+    list.unshift('All Regions');
+    return list;
+  }, [rows]);
 
-  const filtered = useMemo(() => {
-    const q = searchTerm.trim().toLowerCase();
-    return rowData.filter(r => {
-      if (activeRegion !== "All Regions" && r.Region !== activeRegion) return false;
-      if (!q) return true;
-      return (
-        (r["List Name"] || "").toLowerCase().includes(q) ||
-        (r.Country || "").toLowerCase().includes(q) ||
-        (r.Region || "").toLowerCase().includes(q) ||
-        (r.Tier || "").toLowerCase().includes(q)
-      );
-    });
-  }, [rowData, activeRegion, searchTerm]);
+  // Filtering
+  const filtered = useMemo(function () {
+    var q = (searchTerm || '').trim().toLowerCase();
+    var out = [];
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      if (!r) continue;
+      if (activeRegion !== 'All Regions' && r.Region !== activeRegion) continue;
+      if (q) {
+        var hit =
+          String(r['List Name'] || '').toLowerCase().indexOf(q) !== -1 ||
+          String(r.Country || '').toLowerCase().indexOf(q) !== -1 ||
+          String(r.Region || '').toLowerCase().indexOf(q) !== -1 ||
+          String(r.Tier || '').toLowerCase().indexOf(q) !== -1;
+        if (!hit) continue;
+      }
+      out.push(r);
+    }
+    return out;
+  }, [rows, activeRegion, searchTerm]);
+
+  var visible = filtered;
 
   return (
     <div className="wl-root">
+      <style>{`
+        .pep-hidden{display:none}
+        .wl-root { --table-edges: #e5e7eb; }
+        [data-color-mode='dark'] body .wl-root { --table-edges: #2a2f3a; }
+        @media (prefers-color-scheme: dark) { .wl-root { --table-edges: #2a2f3a; } }
+
+        .wl-card {
+          background: var(--card-bg, transparent);
+          border: 1px solid var(--grouped-border--left--light, #e5e7eb);
+          border-radius: 12px;
+          padding: 16px;
+        }
+        .wl-searchRow { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .wl-input {
+          flex: 1; padding: 14px 16px;
+          border: 1px solid var(--timeline-ring, #d1d5db);
+          border-radius: 8px;
+          background: var(--codeblock-inner, #fff);
+          color: inherit; outline: none;
+        }
+        .wl-input::placeholder { color: var(--strikethrough-text-color, #666); }
+        .wl-clear {
+          padding: 10px 12px;
+          border: 1px solid var(--timeline-ring, #d1d5db);
+          border-radius: 8px;
+          background: var(--codeblock-outer, #f5f5f5);
+          color: inherit; cursor: pointer;
+        }
+        .wl-sectionTitle {
+          font-size: 12px; font-weight: 700;
+          color: var(--strikethrough-text-color, #6b7280);
+          letter-spacing: .03em; margin: 6px 0; text-transform: uppercase;
+        }
+        .wl-pills { margin-bottom: 6px; }
+        .wl-pill {
+          appearance: none;
+          border: 1px solid var(--grouped-border--left, #d1d5db);
+          background: var(--codeblock-inner, #fff);
+          color: inherit; padding: 10px 16px; margin: 6px 8px 6px 0;
+          border-radius: 10px; cursor: pointer; transition: all .15s ease; font-weight: 400;
+        }
+        .wl-pill:hover { background: var(--card-background--hover, #f6e2ce); border-color: var(--card-border--hover, #1c1c1e); }
+
+        /* Brand orange */
+        .wl-root {
+          --socure-orange: #ff6900; --socure-orange-600: #e85f00; --socure-orange-700: #cc5400;
+          --socure-orange-ring: rgba(255,105,0,.35);
+        }
+        .wl-pill.is-active {
+          color: #fff;
+          background: linear-gradient(180deg, var(--socure-orange) 0%, var(--socure-orange-600) 100%);
+          border-color: var(--socure-orange-700);
+          box-shadow: 0 1px 2px rgba(0,0,0,.08);
+        }
+        .wl-pill.is-active:hover {
+          background: linear-gradient(180deg, var(--socure-orange-600) 0%, var(--socure-orange-700) 100%);
+          border-color: var(--socure-orange-700);
+        }
+        .wl-pill.is-active:active { transform: translateY(1px); filter: saturate(1.05); }
+        .wl-pill.is-active:focus-visible {
+          outline: none; box-shadow: 0 1px 2px rgba(0,0,0,.08), 0 0 0 3px var(--socure-orange-ring);
+        }
+
+        .wl-meta { margin: 10px 0 14px; color: var(--strikethrough-text-color, #6b7280); font-size: 13px; }
+        .wl-root .rdmd-table table { width: 100%; }
+        .wl-root .rdmd-table thead tr { font-weight: 800; }
+        .wl-root .wl-empty { color: var(--strikethrough-text-color, #6b7280); }
+
+        @media (prefers-color-scheme: dark) {
+          .wl-input { background: var(--codeblock-inner, #242e34); border-color: var(--timeline-ring, #2a2f3a); }
+          .wl-clear { background: var(--codeblock-outer, #384248); border-color: var(--codeblock-outer-border, #292929); }
+          .wl-pill { background: var(--table-row-bg, #242e34); border-color: var(--grouped-border--left, #2a2f3a); }
+          .wl-pill:hover { background: #303743; }
+        }
+      `}</style>
+
       <div className="wl-card">
         <div className="flex items-center mb-2">
           <i className="fa fa-solid fa-database mr-2 text-gray-500 dark:text-gray-300" />
           <span className="font-medium">{header}</span>
-          <span className="ml-2 text-xs text-gray-500 dark:text-gray-300">(rows: {rowData.length})</span>
+          <span className="ml-2 text-xs text-gray-500 dark:text-gray-300">(rows: {rows.length})</span>
         </div>
 
-        {/* Search */}
         <div className="wl-searchRow">
           <input
+            id="wl-search-input"
             className="wl-input"
-            placeholder="Search…"
+            placeholder="Search by country, region, or source…"
             value={searchTerm}
-            onChange={e => setSearchTerm(e.target.value)}
+            onChange={function (e) { setSearchTerm(e.target.value); }}
           />
           {searchTerm ? (
-            <button className="wl-clear" onClick={() => setSearchTerm("")}>Clear</button>
+            <button className="wl-clear" onClick={function () { setSearchTerm(''); }}>Clear</button>
           ) : null}
         </div>
 
-        {/* Regions */}
         <div className="wl-sectionTitle">Regions</div>
         <div className="wl-pills">
-          {regionOptions.map(opt => (
-            <button
-              key={opt}
-              className={"wl-pill" + (opt === activeRegion ? " is-active" : "")}
-              onClick={() => setActiveRegion(opt)}
-            >
-              {opt}
-            </button>
-          ))}
+          {regionOptions.map(function (opt) {
+            var active = opt === activeRegion;
+            return (
+              <button
+                key={opt}
+                className={'wl-pill' + (active ? ' is-active' : '')}
+                title={'Show ' + opt}
+                onClick={function () { setActiveRegion(opt); }}
+              >
+                {opt}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Table */}
-        <div className="wl-meta">Showing {filtered.length} of {rowData.length}</div>
+        <div className="wl-meta">Showing {visible.length} of {filtered.length}</div>
+
         <div className="rdmd-table">
           <table>
             <thead>
-              <tr><th>List Name</th><th>Country</th><th>Region</th><th>Tier</th></tr>
+              <tr>
+                <th>List Name</th>
+                <th>Country</th>
+                <th>Region</th>
+                <th>Tier</th>
+              </tr>
             </thead>
             <tbody>
-              {filtered.length ? filtered.map((r, i) => (
-                <tr key={i}>
-                  <td>{r["List Name"]}</td>
-                  <td>{r.Country}</td>
-                  <td>{r.Region}</td>
-                  <td>{r.Tier}</td>
+              {visible.length ? visible.map(function (r, idx) {
+                return (
+                  <tr key={idx}>
+                    <td>{r['List Name']}</td>
+                    <td>{r.Country}</td>
+                    <td>{r.Region}</td>
+                    <td>{r.Tier}</td>
+                  </tr>
+                );
+              }) : (
+                <tr>
+                  <td colSpan="4" className="wl-empty">No results match your filters.</td>
                 </tr>
-              )) : (
-                <tr><td colSpan="4" className="wl-empty">No results</td></tr>
               )}
             </tbody>
           </table>
