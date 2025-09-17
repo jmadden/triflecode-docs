@@ -98,24 +98,54 @@ function readHiddenData(id) {
 
   // After mount, try to override from <pre id="pep-data">…</pre>.
   useEffect(function () {
-    if (rowsProp) return; // prop wins
-    var attempts = 0;
-    var timer = null;
-    function tryLoad() {
-      attempts += 1;
-      var parsed = readHiddenData(dataId);
-      var n = parsed ? normalizeRows(parsed) : null;
-      if (n && n.length) {
-        setRows(n);
-        return;
-      }
-      if (attempts < 10) {
-        timer = setTimeout(tryLoad, attempts < 3 ? 0 : 100);
-      }
+  if (rowsProp) return; // prop wins
+
+  var stopped = false;
+  function tryLoadOnce() {
+    var parsed = readHiddenData(dataId);
+    var n = parsed ? normalizeRows(parsed) : null;
+    if (n && n.length) {
+      setRows(n);
+      return true; // loaded
     }
-    tryLoad();
-    return function cleanup() { if (timer) clearTimeout(timer); };
-  }, [dataId, rowsProp]);
+    return false; // not yet
+  }
+
+  // Fast path: try immediately
+  if (tryLoadOnce()) return;
+
+  // Short polling for early hydration
+  var attempts = 0;
+  var pollTimer = setInterval(function () {
+    if (stopped) return;
+    attempts += 1;
+    if (tryLoadOnce() || attempts >= 30) { // ~3s @ 100ms
+      clearInterval(pollTimer);
+      pollTimer = null;
+    }
+  }, 100);
+
+  // MutationObserver as a backstop (handles late-inserted HTMLBlock)
+  var mo = null;
+  if (typeof MutationObserver !== 'undefined') {
+    mo = new MutationObserver(function () {
+      if (stopped) return;
+      if (document.getElementById(dataId) && tryLoadOnce()) {
+        if (mo) mo.disconnect();
+        if (pollTimer) clearInterval(pollTimer);
+      }
+    });
+    try {
+      mo.observe(document.documentElement || document.body, { childList: true, subtree: true });
+    } catch (_) {}
+  }
+
+  return function cleanup() {
+    stopped = true;
+    if (pollTimer) clearInterval(pollTimer);
+    if (mo) mo.disconnect();
+  };
+}, [dataId, rowsProp]);
 
   // UI state
   const [activeRegion, setActiveRegion] = useState('All Regions');
