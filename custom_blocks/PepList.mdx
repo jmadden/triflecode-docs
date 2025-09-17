@@ -16,6 +16,25 @@ export const PepList = (props) => {
     ['Canada OSFI Entity List', 'Canada', 'North America', 'Plus/Premium'],
     ['EU Consolidated Sanctions', 'European Union', 'Europe', 'Plus/Premium'],
   ];
+  
+function readHiddenData(id) {
+  if (typeof document === 'undefined') return null;
+  var el = document.getElementById(id);
+  if (!el) return null;
+
+  var raw = el.textContent || '';
+  if (!raw || !raw.trim()) return null;
+
+  try {
+    var encoding = el.getAttribute('data-encoding') || 'json';
+    if (encoding === 'base64json') raw = atob(raw.replace(/\s+/g, ''));
+    return JSON.parse(raw);
+  } catch (e) {
+    console.warn('PepList: failed to parse hidden data', e);
+    return null;
+  }
+}
+
 
   function normalizeRows(parsed) {
     var arr;
