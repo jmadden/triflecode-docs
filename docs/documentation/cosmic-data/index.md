@@ -7,4 +7,4 @@ metadata:
 ---
 All about the cosmose
 
-<br />
+<PepList dataId="pep-data" header="Watchlist Sources" />
