@@ -13,6 +13,12 @@ You're on your way to building an awesome developer hub! Here's some of the thin
 
 Removed lines here
 
+<br />
+
+I love making documentation!
+
+<br />
+
 Defaults: <MethodPill type="POST" /> | <MethodPill type="GET" /> | <MethodPill type="PUT" /> | <MethodPill type="Delete" />
 
 Custom background & text: <MethodPill type="SYNC" bg="#8b5cf6" color="#ffffff" />
