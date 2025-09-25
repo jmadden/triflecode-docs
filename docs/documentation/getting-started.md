@@ -17,7 +17,7 @@ Removed lines here
 
 I love making documentation!
 
-<br />
+I love making documentation!
 
 Defaults: <MethodPill type="POST" /> | <MethodPill type="GET" /> | <MethodPill type="PUT" /> | <MethodPill type="Delete" />
 
