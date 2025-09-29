@@ -1,0 +1,5079 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Site Collectors",
+    "description": "API for Site Collectors and Collectors management",
+    "version": "v1"
+  },
+  "servers": [
+    {
+      "url": "https://api.us-west.exabeam.cloud"
+    },
+    {
+      "url": "https://api.us-east.exabeam.cloud"
+    },
+    {
+      "url": "https://api.sg.exabeam.cloud"
+    },
+    {
+      "url": "https://api.jp.exabeam.cloud"
+    },
+    {
+      "url": "https://api.eu.exabeam.cloud"
+    },
+    {
+      "url": "https://api.au.exabeam.cloud"
+    },
+    {
+      "url": "https://api.ca.exabeam.cloud"
+    },
+    {
+      "url": "https://api.ch.exabeam.cloud"
+    },
+    {
+      "url": "https://api.sa.exabeam.cloud"
+    },
+    {
+      "url": "https://api.uk.exabeam.cloud"
+    }
+  ],
+  "security": [
+    {
+      "oAuth2ClientCredentials": []
+    }
+  ],
+  "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true,
+    "samples-languages": [
+      "python",
+      "powershell",
+      "curl",
+      "go",
+      "javascript",
+      "java",
+      "cplusplus",
+      "csharp",
+      "node",
+      "node-simple"
+    ]
+  },
+  "tags": [
+    {
+      "name": "Site Collectors",
+      "description": "Manage your Site Collector instances."
+    }
+  ],
+  "paths": {
+    "/site-collectors/v1/cores": {
+      "get": {
+        "tags": [
+          "Cores"
+        ],
+        "summary": "Get Site Collector list",
+        "description": "To monitor configuration and management changes, you can retrieve a list of all Site Collector Core IDs with relevant details such as status, version, OS version, hostname, and proxy hostname and port. You can obtain these details for Site Collectors collectively or separately.",
+        "operationId": "site-collector-core-get-all",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of Site Collector Core items given by the Site Collector service.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 25
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Represents the 0-based index of the first item on the current page within the context of the overall requested result set.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "in": "query",
+            "name": "nameContains",
+            "description": "Full or partial match of the name of the Site Collector Core.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDecorator"
+                },
+                "examples": {
+                  "Get Core list response": {
+                    "description": "Get Core list response",
+                    "value": {
+                      "items": [],
+                      "paging": {
+                        "next": [
+                          "https://api.exabeam.cloud/site-collectors/v1/cores?limit=3&offset=9",
+                          "https://api.exabeam.cloud/site-collectors/v1/cores?limit=3&offset=12",
+                          "https://api.exabeam.cloud/site-collectors/v1/cores?limit=3&offset=15"
+                        ],
+                        "prev": [
+                          "https://api.exabeam.cloud/site-collectors/v1/cores?limit=3&offset=3",
+                          "https://api.exabeam.cloud/site-collectors/v1/cores?limit=3&offset=0"
+                        ],
+                        "limit": 3,
+                        "offset": 6,
+                        "pages": 313,
+                        "count": 938
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Cores"
+        ],
+        "summary": "Create a new Site Collector instance",
+        "description": "Create a new Site Collector instance and create a new Site Collector Core on your VM. After you create a Site Collector Core, use the POST installation-command endpoint to retrieve the installation command required to install a Site Collector instance for the given Core ID.",
+        "operationId": "site-collector-create-new-instance",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoreExternalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoreExternalResponse"
+                },
+                "examples": {
+                  "Create Core response": {
+                    "description": "Create Core response",
+                    "value": {
+                      "name": "Core Name",
+                      "deploymentHosts": [
+                        "192.122.1.1"
+                      ],
+                      "installationPath": "/opt",
+                      "extractionPath": "/tmp",
+                      "proxy": {
+                        "host": "192.122.1.2",
+                        "port": "9999",
+                        "protocol": "http"
+                      },
+                      "egressFilter": {
+                        "allowConditions": [
+                          "Allowed-Condition-1",
+                          "Allowed-Condition-2"
+                        ],
+                        "denyConditions": [
+                          "Deny-Condition-1",
+                          "Deny-Condition-2"
+                        ]
+                      },
+                      "metadata": {
+                        "siteId": "26e24952c62c98997889",
+                        "sitename": "test123",
+                        "timezoneOffset": "-0500"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/site-collectors/v1/cores/{coreId}": {
+      "get": {
+        "tags": [
+          "Cores"
+        ],
+        "summary": "Get Site Collector Core details",
+        "description": "Retrieve the current list of attributes and configuration values for a Site Collector Core, identified by its Core ID. The values include the operational status, product version, OS version, hostname, and proxy hostname and port.",
+        "operationId": "site-collector-core-get-list",
+        "parameters": [
+          {
+            "name": "coreId",
+            "in": "path",
+            "description": "Site Collector Core ID. To retrieve the ID, see [Get Site Collector Core details](site-collector-core-get-all).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "5505b966-6abb-4f24-ac81-59cc093a30a8"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoreExternalResponse"
+                },
+                "examples": {
+                  "Get Core by ID response": {
+                    "description": "Get Core by ID response",
+                    "value": {
+                      "id": "a7a18f27-e765-44ba-b0d6-9dc5c902f7d8",
+                      "name": "Core Name",
+                      "tenantId": "DjLoEF",
+                      "deploymentHosts": [
+                        "10.70.3.253"
+                      ],
+                      "proxy": {},
+                      "status": "RUNNING",
+                      "createdDate": 1696946844109,
+                      "modifiedDate": 1696947105293,
+                      "heartbeat": {
+                        "timestamp": 1696954119
+                      },
+                      "currentVersion": "1.13.0",
+                      "latestVersion": "1.13.0",
+                      "coreVersions": {
+                        "latestVersion": "1.13.0",
+                        "stableVersion": "1.10.0"
+                      },
+                      "msiVersion": "0.0.5",
+                      "operationSystem": {
+                        "ipAddress": "10.70.3.253",
+                        "name": "Red Hat Enterprise Linux",
+                        "version": "9.2 (Plow)"
+                      },
+                      "systemConfiguration": {
+                        "cpu": 4,
+                        "memory": "16GB"
+                      },
+                      "installationPath": "/opt",
+                      "extractionPath": "/tmp"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Cores"
+        ],
+        "summary": "Update Site Collector Core details",
+        "description": "Update one or more attributes for an existing Site Collector Core, identified by its Core ID.",
+        "operationId": "site-collector-core-update",
+        "parameters": [
+          {
+            "name": "coreId",
+            "in": "path",
+            "description": "Site Collector Core ID. To retrieve the ID, see [Create a new Site Collector instance](site-collector-create-new-instance) or [Get Site Collector Core details](site-collector-core-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "5505b966-6abb-4f24-ac81-59cc093a30a8"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CoreExternalUpdateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoreExternalResponse"
+                },
+                "examples": {
+                  "Update Core response": {
+                    "description": "Update Core response",
+                    "value": {
+                      "name": "New Core Name",
+                      "deploymentHosts": [
+                        "192.122.1.1"
+                      ],
+                      "installationPath": "/opt",
+                      "extractionPath": "/tmp",
+                      "proxy": {
+                        "host": "192.122.1.2",
+                        "port": "9999",
+                        "protocol": "http"
+                      },
+                      "egressFilter": {
+                        "allowConditions": [
+                          "Allowed-Condition-1",
+                          "Allowed-Condition-2"
+                        ],
+                        "denyConditions": [
+                          "Deny-Condition-1",
+                          "Deny-Condition-2"
+                        ]
+                      },
+                      "metadata": {
+                        "siteId": "26e24952c62c98997889",
+                        "sitename": "test123",
+                        "timezoneOffset": "-0500"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/site-collectors/v1/cores/{coreId}/upgrade": {
+      "put": {
+        "tags": [
+          "Cores"
+        ],
+        "summary": "Upgrade a Site Collector Core version",
+        "description": "Update the Site Collector Core to the most recent product version for the specified Core ID. If the upgrade process is unsuccessful, the Site Collector Core will automatically revert to its original version.",
+        "operationId": "site-collector-core-upgrade",
+        "parameters": [
+          {
+            "name": "coreId",
+            "in": "path",
+            "description": "Site Collector Core ID. To retrieve the ID, see [Create a new Site Collector instance](site-collector-create-new-instance) or [Get Site Collector Core details](site-collector-core-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "5505b966-6abb-4f24-ac81-59cc093a30a8"
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "description": "An optional query parameter for specifying the Site Collector version.   It allows upgrading the Site Collector to an available upgradeable version.   If a version is not provided, the Site Collector will be upgraded to the latest available version. **Note:** The `version` parameter applies only to Site Collector versions `2.7.0` and above. If provided for Site Collector version below `2.7.0`, the Site Collector will upgrade to the latest available version, ignoring the specified version in the API call.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "example": "2.7.0"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/site-collectors/v1/cores/{coreId}/uninstall": {
+      "put": {
+        "tags": [
+          "Cores"
+        ],
+        "summary": "Uninstall an existing Site Collector instance",
+        "description": "Uninstall a Site Collector with a given Site Collector Core ID.",
+        "operationId": "site-collector-core-uninstall",
+        "parameters": [
+          {
+            "name": "coreId",
+            "in": "path",
+            "description": "Site Collector Core ID. To retrieve the ID, see [Create a new Site Collector instance](site-collector-create-new-instance) or [Get Site Collector Core details](site-collector-core-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "5505b966-6abb-4f24-ac81-59cc093a30a8"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/site-collectors/v1/cores/{coreId}/stop": {
+      "put": {
+        "tags": [
+          "Cores"
+        ],
+        "summary": "Stop a Site Collector Core and all associated collectors",
+        "description": "Terminate a specific Site Collector Core, identified by its Core ID, and simultaneously stop all associated Collectors.",
+        "operationId": "site-collector-core-stop",
+        "parameters": [
+          {
+            "name": "coreId",
+            "in": "path",
+            "description": "Site Collector Core ID. To retrieve the ID, see [Create a new Site Collector instance](site-collector-create-new-instance) or [Get Site Collector Core details](site-collector-core-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "5505b966-6abb-4f24-ac81-59cc093a30a8"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/site-collectors/v1/cores/{coreId}/restart": {
+      "put": {
+        "tags": [
+          "Cores"
+        ],
+        "summary": "Restart or start a Site Collector Core and all its Collectors",
+        "description": "Restart or start an existing Site Collector collector by its Collector ID, including all associated collectors. Before restarting a Site Collector Core and the associated collectors, you must first [stop the Site Collector Core](site-collector-core-stop).",
+        "operationId": "site-collector-core-restart",
+        "parameters": [
+          {
+            "name": "coreId",
+            "in": "path",
+            "description": "Site Collector Core ID. To retrieve the ID, see [Create a new Site Collector instance](site-collector-create-new-instance) or [Get Site Collector Core details](site-collector-core-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "5505b966-6abb-4f24-ac81-59cc093a30a8"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/site-collectors/v1/cores/{coreId}/installation-logs": {
+      "get": {
+        "tags": [
+          "Cores"
+        ],
+        "summary": "Get installation logs for a Site Collector Core",
+        "description": "To track installation progress in the real time, retrieve the installation output log data from the output for a given Site Collector Core ID. You can use this data to confirm installation completion.",
+        "operationId": "site-collector-core-get-install-logs",
+        "parameters": [
+          {
+            "name": "coreId",
+            "in": "path",
+            "description": "Site Collector Core ID. To retrieve the ID, see [Get Site Collector Core details](site-collector-core-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "5505b966-6abb-4f24-ac81-59cc093a30a8"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoreInstallationLogExternalResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/site-collectors/v1/cores/{coreId}/installation-command": {
+      "get": {
+        "tags": [
+          "Cores"
+        ],
+        "summary": "Get the installation command for a Site Collector Core",
+        "description": "Use the installation command to install the Site Collector Core on a virtual machine (VM) before you begin to install individual collectors to receive logs. To retrieve the command, you must supply the Core ID.",
+        "operationId": "site-collector-core-install",
+        "parameters": [
+          {
+            "name": "coreId",
+            "in": "path",
+            "description": "Site Collector Core ID. To retrieve the ID, see [Create a new Site Collector instance](site-collector-create-new-instance) or [Get Site Collector Core details](site-collector-core-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "5505b966-6abb-4f24-ac81-59cc093a30a8"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CoreInstallationCommandExternalResponse"
+                },
+                "examples": {
+                  "Sample base64 encoded message": {
+                    "description": "base64 encoded message",
+                    "value": {
+                      "installationCommand": "SGVsbG8gd29ybGQh",
+                      "installationCommandFormat": "base64"
+                    }
+                  },
+                  "Site Collector base64 encoded instalation command": {
+                    "description": "Site Collector base64 encoded instalation command",
+                    "value": {
+                      "installationCommand": "c3VkbyB0bXV4IGtpbGwtc2Vzc2lvbiAtdCBuZ3NjX2luc3RhbGw7IHN1ZG8gdG11eCBuZXcgLXMgbmdzY19pbnN0YWxsIC1kICdleHBvcnQgVE9LRU49IkF1dGhvcml6YXRpb246IEJlYXJlciBleUpyYVdRaU9pSXlNREl6TFRBMExURTRWREUyT2pRM09qRTNLekExT2pNd0lpd2lkSGx3SWpvaVNsZFVJaXdpWVd4bklqb2lVbE15TlRZaWZRLmV5SmxZM0F2YzNWaVgybGtJam9pTmpObE5qRTJaRGsxTnpOaVltTTNZVFE1T0RVeE1qQXdJaXdpWVhCcFgzQnliMlIxWTNSZmJHbHpkQ0k2V3lKRmVHRmlaV0Z0SUVaMWMybHZiaUpkTENKcGMzTWlPaUpvZEhSd2N6b3ZMMkZ3YVdkM0xuQnliMlF1WlhoaFltVmhiUzVqYkc5MVpDSXNJbU5zYVdWdWRGOXBaQ0k2SW05NVQxRTVlbU5zTkdWbFYwSjVlbVZwVUhFMFNraEJRVFJSV21kMGJGQmxPVXh5VW5VelNsQlFZbkJqUm5WUk1TSXNJbUYxWkNJNkltaDBkSEJ6T2k4dllYQnBMblZ6TFhkbGMzUXVaWGhoWW1WaGJTNWpiRzkxWkNJc0ltRndjR3hwWTJGMGFXOXVYMjVoYldVaU9pSnRNbTBpTENKdVltWWlPakUzTVRBNE5qZ3pPRGtzSW1WamNDOXpkV0pmWTI5a1pTSTZJbFJWZDNWTlJ5SXNJbVJsZG1Wc2IzQmxjbDlsYldGcGJDSTZJblIxZDNWdFp5MTFjeTEzWlhOMFFHVjRZV0psWVcwdVkyeHZkV1FpTENKelkyOXdaU0k2SWlJc0ltVmpjQzlqZFhOMGIyMWxjbDlwWkNJNklqVmxaRGt6WkdGaU56a3pNRE5sTVdNMk9UaGtaV1E1TkNJc0ltVjRjQ0k2TVRjeE1EZzRNamM0T1N3aWFXRjBJam94TnpFd09EWTRNemc1TENKbFkzQXZjR1Z5YldsemMybHZibk1pT2lKMWMyVXRZMkZ6WlhNNllXTmpaWE56SUdGMVpHbDBPbkYxWlhKNUlHTnZiblJsZUhRdGJXRnVZV2RsYldWdWREcHRZVzVoWjJVZ2MybDBaUzFqYjJ4c1pXTjBiM0p6T20xaGJtRm5aU0JqYjNKeVpXeGhkR2x2YmkxeWRXeGxjenB0WVc1aFoyVWdjMlZoY21Ob09uRjFaWEo1SWl3aWFuUnBJam9pTlRjMk16QTROalF0WmpOaE9TMDBaVGhoTFRneU1USXRNamd3WVRaa1pXVm1ZV1ZsSW4wLkI4OGxYY2VkN3l2NTc3OTRsR2VIVTA4V1AzOVI1aGdmWUhKM1RiWU5jX2tJZGR3UHdFTzJXMzhJRU5pSVNXNjBrekRyMmZzbkxQcFlLclYxdU9FaGtjVHN1TUE0RmxCcjNjNmp5ek1zRWl0bVJOanR5c3RjeFNJR3VMenpqM1VQTHVvR3dldWVSMFE3RmdfT1pEYi1LbDRveC1vdjA4N2czMDVLQUhfM3lwV1kxeHNjSEtiajU3NDl1NzR4d2lDdG91Y3p3M2ctdldybjBsUko0VC15ZjI4anlaVDBhTjdxejJJZHIyUEJnaWU4aW9lS200UXFsUnhHcW5kNUp1ZUFrTXB1SEdRX1BWZDVqNk9Eb29fNjdYOGhXMkxuZUpRRmpjUGg5QmN6bHlPcDhqTl84S3hPTXNDNHdGNVl2X1VRSXZQaHl0YzF2Vnk3cGptZGYzbkNqUSI7IGV4cG9ydCBCRV9BUEk9Imh0dHBzOi8vYXBpLnVzLXdlc3QuZXhhYmVhbS5jbG91ZC9zaXRlLWNvbGxlY3RvcnMvdjEiOyBleHBvcnQgTkdTQ19JRD0iY29yZUlkIjsgIGV4cG9ydCBOR1NDX0lOU1RBTExBVElPTl9QQVRIPSIvb3B0IjsgZXhwb3J0IE5HU0NfRVhUUkFDVElPTl9QQVRIPSIvdG1wIjsgY3VybCAtc1NMICIkQkVfQVBJL2NvcmVzLyROR1NDX0lEL2luc3RhbGxhdGlvbi1zY3JpcHQiIC1IICIkVE9LRU4iIHwgYmFzaCAtczsgYmFzaCdcOyBwaXBlLXBhbmUgLXQgbmdzY19pbnN0YWxsIC1vICJjYXQgPj4gfi9uZ3NjX3RtdXhfJChkYXRlICslWSVtJWQlSCVNJVMpLmxvZyIgXDsgYXR0YWNoLXNlc3Npb24gLXQgbmdzY19pbnN0YWxs",
+                      "installationCommandFormat": "base64"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/site-collectors/v1/cores/{coreId}/certificates/download": {
+      "get": {
+        "description": "Download the certificate for a Site Collector Core identified by its Core ID.",
+        "operationId": "site-collector-core-download-certificate",
+        "parameters": [
+          {
+            "name": "coreId",
+            "in": "path",
+            "description": "Site Collector Core ID. To retrieve the ID, see [Get Site Collector Core details](site-collector-core-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "5505b966-6abb-4f24-ac81-59cc093a30a8"
+          },
+          {
+            "name": "collectorType",
+            "in": "query",
+            "description": "Site Collector agent type. For Site Collector version `2.8.0` or higher, it is recommended to provide the `collectorType` value, as there is a change in the certificate file format. For `ArchiveLinux` and `FileLinux`, the certificate file will be in `.tar.gz` format, while for other types, it will remain in `.zip` format.",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/TemplateCollectorsType"
+            },
+            "example": "ArchiveLinux"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Download a Site Collector Core certificate",
+        "tags": [
+          "Cores"
+        ]
+      }
+    },
+    "/site-collectors/v1/collectors": {
+      "get": {
+        "tags": [
+          "Agents"
+        ],
+        "summary": "Get a list of Site Collector agents",
+        "description": "To monitor configuration and management changes, you can retrieve a list of all Site Collector agents with relevant details such as status. You can obtain these details for Site Collector agents collectively or separately. Results are paginated.",
+        "operationId": "site-collectors-agent-get-list",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Maximum number of Site Collector agent items given by the Site Collector service.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 25
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "description": "Represents the 0-based index of the first item on the current page within the context of the overall requested result set.",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "nameContains",
+            "in": "query",
+            "description": "Full or partial match of the Site Collector agent name.",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageDecorator"
+                },
+                "examples": {
+                  "Get Collector list response": {
+                    "description": "Get Collector list response",
+                    "value": {
+                      "items": [],
+                      "paging": {
+                        "next": [
+                          "https://api.exabeam.cloud/site-collectors/v1/collectors?limit=3&offset=9",
+                          "https://api.exabeam.cloud/site-collectors/v1/collectors?limit=3&offset=12",
+                          "https://api.exabeam.cloud/site-collectors/v1/collectors?limit=3&offset=15"
+                        ],
+                        "prev": [
+                          "https://api.exabeam.cloud/site-collectors/v1/collectors?limit=3&offset=3",
+                          "https://api.exabeam.cloud/site-collectors/v1/collectors?limit=3&offset=0"
+                        ],
+                        "limit": 3,
+                        "offset": 6,
+                        "pages": 313,
+                        "count": 938
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "post": {
+        "description": "Create a remote Site Collector agent of a specific type. Refer to the examples for details on the different parameters required for each collector type. For file-based and Windows collectors, after you create the Site Collector agent, you will obtain the installation command and then supply the necessary certificates.",
+        "operationId": "site-collectors-agent-create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "EStreamer creation": {
+                  "description": "Create EStreamer collector using `type` property = `EStreamer`. `coreId` and `host` must be defined.\n",
+                  "summary": "EStreamer",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My EStreamer Collector",
+                    "type": "EStreamer",
+                    "settings": {
+                      "port": 8302,
+                      "host": "35.227.144.74",
+                      "certificatePassword": "123!!",
+                      "fetchStartTimestamp": "2024-06-05T10:41:31Z",
+                      "exclude": [
+                        24,
+                        74
+                      ],
+                      "tls": "TLSv1_2"
+                    }
+                  }
+                },
+                "Fortinet creation": {
+                  "description": "Create Fortinet collector using `type` property = `Fortinet`. `coreId` must be defined.\n",
+                  "summary": "Fortinet",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My Fortinet Collector",
+                    "type": "Fortinet",
+                    "settings": {
+                      "protocol": "TCP",
+                      "port": 1098,
+                      "securedConnection": true,
+                      "customCertificate": false,
+                      "tls": "TLSv1_2"
+                    }
+                  }
+                },
+                "Kafka creation": {
+                  "description": "Create Kafka collector using `type` property = `Kafka`. `coreId` must be defined.\n",
+                  "summary": "Kafka",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My Kafka Collector",
+                    "type": "Kafka",
+                    "settings": {
+                      "brokers": {
+                        "host": "192.168.0.11",
+                        "port": 9093
+                      },
+                      "protocol": "SASL",
+                      "saslMechanism": "SCRAM_SHA_256",
+                      "saslUsername": "admin",
+                      "saslPassword": "123!!",
+                      "topics": [
+                        "doodoo1",
+                        "doodoo2"
+                      ]
+                    }
+                  }
+                },
+                "Ldap creation": {
+                  "description": "Create Ldap collector using `type` property = `Ldap`. `coreId` must be defined.\n",
+                  "summary": "Ldap",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My Ldap Collector",
+                    "type": "Ldap",
+                    "settings": {
+                      "baseDn": "DC=ad,DC=exabeam,DC=com",
+                      "bindDn": "CN=lin,CN=Users,DC=ad,DC=exabeam,DC=com",
+                      "bindPassword": "123!!!",
+                      "globalCatalog": false,
+                      "port": 389,
+                      "primaryHost": "10.70.0.89",
+                      "pullFullContext": true,
+                      "pollingInterval": 1000,
+                      "secondaryHosts": [
+                        "127.0.0.2",
+                        "127.0.0.3"
+                      ],
+                      "ssl": false
+                    }
+                  }
+                },
+                "MSSQL creation": {
+                  "description": "Create MSSQL collector using `type` property = `MSSQL`. `coreId` must be defined.\n",
+                  "summary": "MSSQL",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My MSSQL Collector",
+                    "type": "MSSQL",
+                    "settings": {
+                      "database": "public",
+                      "host": "10.70.0.161",
+                      "initialValue": 50,
+                      "iteratorColumn": "ID",
+                      "password": "123!!!",
+                      "port": "1521",
+                      "pollingInterval": "30",
+                      "query": "SELECT t1.ID, t1.INSERTATION_TIME, t1.FIRST_NAME, t2.LAST_NAME FROM test_data t1 JOIN test_data2 t2 ON t1.ID = t2.ID",
+                      "username": "system",
+                      "sslEncryption": true
+                    }
+                  }
+                },
+                "MySQL creation": {
+                  "description": "Create MySQL collector using `type` property = `MySQL`. `coreId` must be defined.\n",
+                  "summary": "MySQL",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My MySQL Collector",
+                    "type": "MySQL",
+                    "settings": {
+                      "database": "public",
+                      "host": "10.70.0.161",
+                      "initialValue": 50,
+                      "iteratorColumn": "ID",
+                      "password": "123!!!",
+                      "port": "1521",
+                      "pollingInterval": "30",
+                      "query": "SELECT t1.ID, t1.INSERTATION_TIME, t1.FIRST_NAME, t2.LAST_NAME FROM test_data t1 JOIN test_data2 t2 ON t1.ID = t2.ID",
+                      "username": "system"
+                    }
+                  }
+                },
+                "OpenLdap creation": {
+                  "description": "Create OpenLdap collector using `type` property = `OpenLdap`. `coreId` must be defined.\n",
+                  "summary": "OpenLdap",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My OpenLdap Collector",
+                    "type": "OpenLdap",
+                    "settings": {
+                      "baseDn": "DC=ad,DC=exabeam,DC=com",
+                      "bindDn": "CN=lin,CN=Users,DC=ad,DC=exabeam,DC=com",
+                      "bindPassword": "123!!!",
+                      "globalCatalog": false,
+                      "port": 389,
+                      "primaryHost": "10.70.0.89",
+                      "pullFullContext": true,
+                      "pollingInterval": 1000,
+                      "secondaryHosts": [
+                        "127.0.0.2",
+                        "127.0.0.3"
+                      ],
+                      "ssl": false
+                    }
+                  }
+                },
+                "Oracle creation": {
+                  "description": "Create Oracle collector using `type` property = `Oracle`. `coreId` must be defined.\n",
+                  "summary": "Oracle",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My Oracle Collector",
+                    "type": "Oracle",
+                    "settings": {
+                      "host": "10.70.0.161",
+                      "initialValue": 50,
+                      "iteratorColumn": "ID",
+                      "password": "123!!!",
+                      "port": "1521",
+                      "pollingInterval": "30",
+                      "query": "SELECT t1.ID, t1.INSERTATION_TIME, t1.FIRST_NAME, t2.LAST_NAME FROM test_data t1 JOIN test_data2 t2 ON t1.ID = t2.ID",
+                      "username": "system",
+                      "dbDriver": "ojdbc10",
+                      "connectionType": "SERVICE_NAME",
+                      "connection": "XEPDB1"
+                    }
+                  }
+                },
+                "QRadar creation": {
+                  "description": "Create QRadar collector using `type` property = `QRadar`. `coreId` must be defined.\nIf `authType` is `LOGIN`, `token` property must be `null`.\nIf `authType` is `TOKEN`, `token` property must be defined instead of `login` and `password`.\n",
+                  "summary": "QRadar",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My QRadar Collector",
+                    "type": "QRadar",
+                    "settings": {
+                      "host": "12.23.32.45",
+                      "authType": "LOGIN",
+                      "token": null,
+                      "username": "admin",
+                      "password": "123!!!",
+                      "customColumns": [
+                        "qa"
+                      ],
+                      "port": 8089,
+                      "protocol": "https",
+                      "fetchStartTimestamp": "2024-06-05T10:41:31Z"
+                    }
+                  }
+                },
+                "Splunk creation": {
+                  "description": "Create Splunk collector using `type` property = `Splunk`. `coreId` must be defined.\nIf `authType` is `LOGIN`, `token` property must be `null`.\nIf `authType` is `TOKEN`, `token` property must be defined instead of `login` and `password`.\n",
+                  "summary": "Splunk",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My Splunk Collector",
+                    "type": "Splunk",
+                    "settings": {
+                      "authType": "LOGIN",
+                      "eventType": "plain",
+                      "host": "10.70.0.3",
+                      "login": "admin",
+                      "password": "123!!!",
+                      "port": 8089,
+                      "protocol": "https",
+                      "pollingInterval": 300,
+                      "query": "search *",
+                      "tls": "TLSv1_2",
+                      "token": null
+                    }
+                  }
+                },
+                "Syslog creation": {
+                  "description": "Create Syslog collector using `type` property = `Syslog`. `coreId` must be defined.\n",
+                  "summary": "Syslog",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My Syslog Collector",
+                    "type": "Syslog",
+                    "settings": {
+                      "certificate": "some/path",
+                      "port": 123,
+                      "protocol": "http"
+                    }
+                  }
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/CollectorExternalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Create Collector response": {
+                    "description": "Create Collector response",
+                    "value": "{\n    \"id\": \"4a4f1a40-f458-4569-b5f0-4768eda5cdad\",\n    \"name\": \"Collector Name\",\n    \"type\": \"Ldap\",\n    \"status\": \"RUNNING\",\n    \"settings\": {\n        \"port\": 8080,\n        \"primaryHost\": \"10.70.0.89\",\n        \"secondaryHosts\": [\n            \"127.0.0.2\",\n            \"127.0.0.3\"\n        ],\n        \"ssl\": false,\n        \"globalCatalog\": false,\n        \"baseDn\": \"DC=ad,DC=exabeam,DC=com\",\n        \"bindDn\": \"CN=lin,CN=Users,DC=ad,DC=exabeam,DC=com\",\n        \"pullFullContext\": true,\n        \"pollingInterval\": 300\n    },\n    \"coreId\": \"093615b8-73f2-4ee0-a770-41ae6cd39126\",\n    \"coreName\": \"Core Name\",\n    \"heartbeat\": {},\n}\n"
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/CollectorExternalResponse"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Create a Site Collector agent",
+        "tags": [
+          "Agents"
+        ]
+      }
+    },
+    "/site-collectors/v1/collectors/commands/installation": {
+      "post": {
+        "description": "Install command to install the Site Collector agent. The command is encoded in base64, necessitating a decoding step. This encoding ensures the command's integrity during transmission, maintaining its format and preventing alterations. For example, after you receive the response, you can decode the string using the command `base64 -d <<< \"c3Vkb...............\"`.\nAfter decoding the command from base64 to its original string format, you'll have the necessary shell commands to install the Site Collector agent. The install command varies depending on the type of Site Collector agent as defined in the Site Collector template. The command sequence downloads and runs a script to configure the agent and passes in parameters (`deploymentHosts`, `templateIds`, and optionally `fetchStartDate` and `fetchHistoricalData`) that affect how the script configures the Site Collector agent.",
+        "operationId": "site-collectors-agent-get-installation-command",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "ArchiveLinux creation": {
+                  "description": "Create Archive Linux collector using `type` property = `ArchiveLinux`. `coreId` and `templateIds` must be defined.\nArchive Linux collector must be created via executing installation script on the Linux VM where you want to install the collector.\n",
+                  "summary": "ArchiveLinux",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "type": "ArchiveLinux",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "templateIds": [
+                      "030cee78-c95a-4121-8fd3-867a40e8e3b8"
+                    ]
+                  }
+                },
+                "ArchiveWindows creation": {
+                  "description": "Create Archive Windows collector using `type` property = `ArchiveWindows`. `coreId` and `templateIds` must be defined.\nArchive Windows collector must be created via executing installation script on the Windows VM where you want to install the collector.\n",
+                  "summary": "ArchiveWindows",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "type": "ArchiveWindows",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "templateIds": [
+                      "030cee78-c95a-4121-8fd3-867a40e8e3b8"
+                    ]
+                  }
+                },
+                "FileLinux creation": {
+                  "description": "Create Linux File collector using `type` property = `FileLinux`. `coreId` and `templateIds` must be defined.\nLinux File collector must be created via executing installation script on the Linux VM where you want to install the collector.\n",
+                  "summary": "FileLinux",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "type": "FileLinux",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "settings": {
+                      "fetchHistoricalData": true
+                    },
+                    "templateIds": [
+                      "030cee78-c95a-4121-8fd3-867a40e8e3b8"
+                    ]
+                  }
+                },
+                "FileWindows creation": {
+                  "description": "Create Windows File collector using `type` property = `FileWindows`. `coreId` and `templateIds` must be defined.\nWindows File collector must be created via executing installation script on the Windows VM where you want to install the collector.\n",
+                  "summary": "FileWindows",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "type": "FileWindows",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "settings": {
+                      "fetchHistoricalData": true
+                    },
+                    "templateIds": [
+                      "030cee78-c95a-4121-8fd3-867a40e8e3b8"
+                    ]
+                  }
+                },
+                "Windows creation": {
+                  "description": "Create Windows collector using `type` property = `Windows`. `coreId` and `templateIds` must be defined.\nWindows collector must be created via executing installation script on the Windows VM where you want to install the collector.\n",
+                  "summary": "Windows",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "type": "Windows",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "templateIds": [
+                      "030cee78-c95a-4121-8fd3-867a40e8e3b8",
+                      "d30cee68-cy5a-4121-8f63-t67a4ge8e3b7"
+                    ]
+                  }
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/CollectorInstallationCommandExternalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Installation command": {
+                    "description": "Installation command",
+                    "value": {
+                      "command": "cG93ZXJzaGVsbC5leGUgLU5vTG9nbyAtRXhlY3V0aW9uUG9saWN5IEJ5cGFzcyAtQ29tbWFuZCAiSW52b2tlLVdlYlJlcXVlc3QgLU91dEZpbGUgJ3dmY19pbnN0YWxsLnBzMScgLVVyaSAnaHR0cDovLyQxMjMuMTIzLjEyMzo5ODc1Lz9maWxlbmFtZT13ZmNfaW5zdGFsbC5wczEnOyAuXFx3ZmNfaW5zdGFsbC5wczEgLW5nc2NfaXAgJDEyMy4xMjMuMTIzIC10ZW1wbGF0ZV9pZCAkMTExMTEgMjIyIg==",
+                      "commandFormat": "base64"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/PageDecorator"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Get a Site Collector agent installation command",
+        "tags": [
+          "Agents"
+        ]
+      }
+    },
+    "/site-collectors/v1/collectors/commands/uninstallation": {
+      "post": {
+        "description": "Uninstall command to uninstall the Site Collector agent. The command is encoded in base64, necessitating a decoding step. This encoding ensures the command's integrity during transmission, maintaining its format and preventing alterations. For example, after you receive the response, you can decode the string using the command \n`base64 -d <<< \"c3Vkb...............\"`\nAfter decoding the command from base64 to its original string format, you'll have the necessary shell commands to uninstall the Site Collector agent. The uninstall command varies depending on the type of Site Collector agent as defined in the Site Collector template. The command sequence downloads and runs a script to delete the agent.",
+        "operationId": "site-collectors-agent-get-uninstallation-command",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "ArchiveLinux deletion": {
+                  "description": "Uninstall Archive Linux collector using `type` property = `ArchiveLinux`. `deploymentHosts`.\n",
+                  "summary": "ArchiveLinux",
+                  "value": {
+                    "type": "ArchiveLinux",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "collectorId": "4a4f1a40-f458-4569-b5f0-4768eda5cdad"
+                  }
+                },
+                "ArchiveWindows deletion": {
+                  "description": "Uninstall Archive Windows collector using `type` property = `ArchiveWindows`. `deploymentHosts`.\n",
+                  "summary": "ArchiveWindows",
+                  "value": {
+                    "type": "ArchiveWindows",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "collectorId": "4a4f1a40-f458-4569-b5f0-4768eda5cdad"
+                  }
+                },
+                "FileLinux deletion": {
+                  "description": "Uninstall Linux File collector using `type` property = `FileLinux`. `deploymentHosts`.\n",
+                  "summary": "FileLinux",
+                  "value": {
+                    "type": "FileLinux",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "collectorId": "4a4f1a40-f458-4569-b5f0-4768eda5cdad"
+                  }
+                },
+                "FileWindows deletion": {
+                  "description": "Uninstall Windows File collector using `type` property = `FileWindows`. `deploymentHosts`.\n",
+                  "summary": "FileWindows",
+                  "value": {
+                    "type": "FileWindows",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "collectorId": "4a4f1a40-f458-4569-b5f0-4768eda5cdad"
+                  }
+                },
+                "Windows deletion": {
+                  "description": "Uninstall Windows collector using `type` property = `Windows`. `deploymentHosts`.\n",
+                  "summary": "Windows",
+                  "value": {
+                    "type": "Windows",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "collectorId": "4a4f1a40-f458-4569-b5f0-4768eda5cdad"
+                  }
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/CollectorUninstallationCommandExternalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Uninstallation command": {
+                    "description": "Uninstallation command",
+                    "value": {
+                      "command": "cG93ZXJzaGVsbC5leGUgLU5vTG9nbyAtRXhlY3V0aW9uUG9saWN5IEJ5cGFzcyAtQ29tbWFuZCAiSW52b2tlLVdlYlJlcXVlc3QgLU91dEZpbGUgJ3dmY19pbnN0YWxsLnBzMScgLVVyaSAnaHR0cDovLyQxMjMuMTIzLjEyMzo5ODc1Lz9maWxlbmFtZT13ZmNfaW5zdGFsbC5wczEnOyAuXFx3ZmNfaW5zdGFsbC5wczEgLW5nc2NfaXAgJDEyMy4xMjMuMTIzIC10ZW1wbGF0ZV9pZCAkMTExMTEgMjIyIg==",
+                      "commandFormat": "base64"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/PageDecorator"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Get a Site Collector agent uninstallation command",
+        "tags": [
+          "Agents"
+        ]
+      }
+    },
+    "/site-collectors/v1/collectors/commands/support-package": {
+      "post": {
+        "description": "Support package command to generate the support package of the Site Collector agent.  The command is encoded in base64, necessitating a decoding step. This encoding ensures the command's integrity during transmission, maintaining its format and preventing alterations. For example, after you receive the response, you can decode the string using the command \n`base64 -d <<< \"c3Vkb...............\"`\nAfter decoding the command from base64 to its original string format, you'll have the necessary shell commands to generate the support package of the Site Collector agent. The support package command varies depending on the type of Site Collector agent as defined in the Site Collector template. The command sequence downloads and runs a script to generate the support package of the agent.",
+        "operationId": "site-collectors-agent-get-support-package-command",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "ArchiveLinux support-package": {
+                  "description": "Generate support package command for Archive Linux collector using `type` property = `ArchiveLinux`. `deploymentHosts`.\n",
+                  "summary": "ArchiveLinux",
+                  "value": {
+                    "type": "ArchiveLinux",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "collectorId": "68e52dd1-fd50-49d4-b085-a12b51dd6eca"
+                  }
+                },
+                "ArchiveWindows support-package": {
+                  "description": "Generate support package command for Archive Windows collector using `type` property = `ArchiveWindows`. `deploymentHosts`.\n",
+                  "summary": "ArchiveWindows",
+                  "value": {
+                    "type": "ArchiveWindows",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "collectorId": "68e52dd1-fd50-49d4-b085-a12b51dd6eca"
+                  }
+                },
+                "FileLinux support-package": {
+                  "description": "Generate support package command for Linux File collector using `type` property = `FileLinux`. `deploymentHosts`.\n",
+                  "summary": "FileLinux",
+                  "value": {
+                    "type": "FileLinux",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "collectorId": "68e52dd1-fd50-49d4-b085-a12b51dd6eca"
+                  }
+                },
+                "FileWindows support-package": {
+                  "description": "Generate support package command for Windows File collector using `type` property = `FileWindows`. `deploymentHosts`.\n",
+                  "summary": "FileWindows",
+                  "value": {
+                    "type": "FileWindows",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "collectorId": "68e52dd1-fd50-49d4-b085-a12b51dd6eca"
+                  }
+                },
+                "Windows support-package": {
+                  "description": "Generate support package command for Windows collector using `type` property = `Windows`. `deploymentHosts`.\n",
+                  "summary": "Windows",
+                  "value": {
+                    "type": "Windows",
+                    "deploymentHosts": [
+                      "10.70.0.3"
+                    ],
+                    "collectorId": "68e52dd1-fd50-49d4-b085-a12b51dd6eca"
+                  }
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/CollectorSupportPackageCommandExternalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Support-Package command": {
+                    "description": "Support package command",
+                    "value": {
+                      "command": "cG93ZXJzaGVsbC5leGUgLU5vTG9nbyAtQ29tbWFuZCBcIkludm9rZS1XZWJSZXF1ZXN0IC1PdXRGaWxlICd3aW5kb3dzX3N1cHBvcnRfcGFja2FnZS5wczEnIC1VcmkgJ2h0dHA6Ly80OTUuNDI0LjUzNC4yMTo5ODc1Lz9maWxlbmFtZT13aW5kb3dzX3N1cHBvcnRfcGFja2FnZS5wczEnOyAuXFx3aW5kb3dzX3N1cHBvcnRfcGFja2FnZS5wczEgLWZvcmNlXCI=",
+                      "commandFormat": "base64"
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/PageDecorator"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Get a Site Collector agent support-package command",
+        "tags": [
+          "Agents"
+        ]
+      }
+    },
+    "/site-collectors/v1/collectors/{collectorId}": {
+      "get": {
+        "description": "Display details such as the `name`, `status`, and `settings` for an agent collector identified by its Collector ID.",
+        "operationId": "site-collectors-agent-get-details",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collectorId",
+            "description": "Site Collector agent ID. To retrieve the ID, see [Get a list of Site Collector agents](site-collectors-agent-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "4a4f1a40-f458-4569-b5f0-4768eda5cdad"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Get Site Collector agent by ID with template": {
+                    "description": "Get Site Collector agent by ID with template",
+                    "value": {
+                      "coreId": "5505b966-6abb-4f24-ac81-59cc093a30a8",
+                      "coreName": "Site Collector Test",
+                      "heartbeat": {},
+                      "id": "c6b54b64-e242-441e-a0f3-80889ed85c6e",
+                      "name": "WELC_04/07/2023 06:30:05_NGSC24134",
+                      "type": "Windows",
+                      "settings": {
+                        "fetchStartDate": "2024-06-05T10:41:31Z"
+                      },
+                      "status": "RUNNING",
+                      "templates": [
+                        {
+                          "collectorsCount": 0,
+                          "createdDate": "2024-04-30T13:23:14.051Z",
+                          "id": "68e52dd1-fd50-49d4-b085-a12b51dd6eca",
+                          "modifiedDate": "2024-04-30T13:23:14.051Z",
+                          "name": "new temp",
+                          "type": "Windows",
+                          "settings": {
+                            "categories": [
+                              {
+                                "consumeRange": "100",
+                                "name": "Application"
+                              },
+                              {
+                                "excludeRange": "200",
+                                "name": "DFS Replication"
+                              }
+                            ],
+                            "inactivePolicy": "24h",
+                            "messageFormat": "Both"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/CollectorExternalResponse"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Get details about a Site Collector agent",
+        "tags": [
+          "Agents"
+        ]
+      },
+      "put": {
+        "description": "Modify the attributes, such as name, authentication data, or settings, for a Site Collector agent.",
+        "operationId": "site-collectors-agent-update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collectorId",
+            "description": "Site Collector agent ID. To retrieve the ID, see [Get a list of Site Collector agents](site-collectors-agent-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "4a4f1a40-f458-4569-b5f0-4768eda5cdad"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "ArchiveLinux creation": {
+                  "description": "Create Archive Linux collector using `type` property = `ArchiveLinux`. `coreId` and `templateIds` must be defined.\nArchive Linux collector must be created via executing installation script on the Linux VM where you want to install the collector.\n",
+                  "summary": "ArchiveLinux",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "type": "ArchiveLinux",
+                    "templateIds": [
+                      "030cee78-c95a-4121-8fd3-867a40e8e3b8"
+                    ]
+                  }
+                },
+                "ArchiveWindows creation": {
+                  "description": "Create Archive Windows collector using `type` property = `ArchiveWindows`. `coreId` and `templateIds` must be defined.\nArchive Windows collector must be created via executing installation script on the Windows VM where you want to install the collector.\n",
+                  "summary": "ArchiveWindows",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "type": "ArchiveWindows",
+                    "templateIds": [
+                      "030cee78-c95a-4121-8fd3-867a40e8e3b8"
+                    ]
+                  }
+                },
+                "EStreamer creation": {
+                  "description": "Create EStreamer collector using `type` property = `EStreamer`. `coreId` and `host` must be defined.\n",
+                  "summary": "EStreamer",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My EStreamer Collector",
+                    "type": "EStreamer",
+                    "settings": {
+                      "port": 8302,
+                      "host": "35.227.144.74",
+                      "certificatePassword": "123!!",
+                      "fetchStartTimestamp": "2024-06-05T10:41:31Z",
+                      "exclude": [
+                        24,
+                        74
+                      ],
+                      "tls": "TLSv1_2"
+                    }
+                  }
+                },
+                "FileLinux creation": {
+                  "description": "Create Linux File collector using `type` property = `FileLinux`. `coreId` and `templateIds` must be defined.\nLinux File collector must be created via executing installation script on the Linux VM where you want to install the collector.\n",
+                  "summary": "FileLinux",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "type": "FileLinux",
+                    "settings": {
+                      "fetchHistoricalData": true
+                    },
+                    "templateIds": [
+                      "030cee78-c95a-4121-8fd3-867a40e8e3b8"
+                    ]
+                  }
+                },
+                "FileWindows creation": {
+                  "description": "Create Windows File collector using `type` property = `FileWindows`. `coreId` and `templateIds` must be defined.\nWindows File collector must be created via executing installation script on the Windows VM where you want to install the collector.\n",
+                  "summary": "FileWindows",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "type": "FileWindows",
+                    "settings": {
+                      "fetchHistoricalData": true
+                    },
+                    "templateIds": [
+                      "030cee78-c95a-4121-8fd3-867a40e8e3b8"
+                    ]
+                  }
+                },
+                "Fortinet creation": {
+                  "description": "Create Fortinet collector using `type` property = `Fortinet`. `coreId` must be defined.\n",
+                  "summary": "Fortinet",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My Fortinet Collector",
+                    "type": "Fortinet",
+                    "settings": {
+                      "protocol": "TCP",
+                      "port": 1098,
+                      "securedConnection": true,
+                      "customCertificate": false,
+                      "tls": "TLSv1_2"
+                    }
+                  }
+                },
+                "Kafka creation": {
+                  "description": "Create Kafka collector using `type` property = `Kafka`. `coreId` must be defined.\n",
+                  "summary": "Kafka",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My Kafka Collector",
+                    "type": "Kafka",
+                    "settings": {
+                      "brokers": {
+                        "host": "192.168.0.11",
+                        "port": 9093
+                      },
+                      "protocol": "SASL",
+                      "saslMechanism": "SCRAM_SHA_256",
+                      "saslUsername": "admin",
+                      "saslPassword": "123!!",
+                      "topics": [
+                        "doodoo1",
+                        "doodoo2"
+                      ]
+                    }
+                  }
+                },
+                "Ldap creation": {
+                  "description": "Create Ldap collector using `type` property = `Ldap`. `coreId` must be defined.\n",
+                  "summary": "Ldap",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My Ldap Collector",
+                    "type": "Ldap",
+                    "settings": {
+                      "baseDn": "DC=ad,DC=exabeam,DC=com",
+                      "bindDn": "CN=lin,CN=Users,DC=ad,DC=exabeam,DC=com",
+                      "bindPassword": "123!!!",
+                      "globalCatalog": false,
+                      "port": 389,
+                      "primaryHost": "10.70.0.89",
+                      "pullFullContext": true,
+                      "pollingInterval": 300,
+                      "secondaryHosts": [
+                        "127.0.0.2",
+                        "127.0.0.3"
+                      ],
+                      "ssl": false
+                    }
+                  }
+                },
+                "MSSQL creation": {
+                  "description": "Create MSSQL collector using `type` property = `MSSQL`. `coreId` must be defined.\n",
+                  "summary": "MSSQL",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My MSSQL Collector",
+                    "type": "MSSQL",
+                    "settings": {
+                      "database": "public",
+                      "host": "10.70.0.161",
+                      "initialValue": 50,
+                      "iteratorColumn": "ID",
+                      "password": "123!!!",
+                      "port": "1521",
+                      "pollingInterval": "30",
+                      "query": "SELECT t1.ID, t1.INSERTATION_TIME, t1.FIRST_NAME, t2.LAST_NAME FROM test_data t1 JOIN test_data2 t2 ON t1.ID = t2.ID",
+                      "username": "system",
+                      "sslEncryption": true
+                    }
+                  }
+                },
+                "MySQL creation": {
+                  "description": "Create MySQL collector using `type` property = `MySQL`. `coreId` must be defined.\n",
+                  "summary": "MySQL",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My MySQL Collector",
+                    "type": "MySQL",
+                    "settings": {
+                      "database": "public",
+                      "host": "10.70.0.161",
+                      "initialValue": 50,
+                      "iteratorColumn": "ID",
+                      "password": "123!!!",
+                      "port": "1521",
+                      "pollingInterval": "30",
+                      "query": "SELECT t1.ID, t1.INSERTATION_TIME, t1.FIRST_NAME, t2.LAST_NAME FROM test_data t1 JOIN test_data2 t2 ON t1.ID = t2.ID",
+                      "username": "system"
+                    }
+                  }
+                },
+                "OpenLdap creation": {
+                  "description": "Create OpenLdap collector using `type` property = `OpenLdap`. `coreId` must be defined.\n",
+                  "summary": "OpenLdap",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My OpenLdap Collector",
+                    "type": "OpenLdap",
+                    "settings": {
+                      "baseDn": "DC=ad,DC=exabeam,DC=com",
+                      "bindDn": "CN=lin,CN=Users,DC=ad,DC=exabeam,DC=com",
+                      "bindPassword": "123!!!",
+                      "globalCatalog": false,
+                      "port": 389,
+                      "primaryHost": "10.70.0.89",
+                      "pullFullContext": true,
+                      "pollingInterval": 300,
+                      "secondaryHosts": [
+                        "127.0.0.2",
+                        "127.0.0.3"
+                      ],
+                      "ssl": false
+                    }
+                  }
+                },
+                "Oracle creation": {
+                  "description": "Create Oracle collector using `type` property = `Oracle`. `coreId` must be defined.\n",
+                  "summary": "Oracle",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My Oracle Collector",
+                    "type": "Oracle",
+                    "settings": {
+                      "host": "10.70.0.161",
+                      "initialValue": 50,
+                      "iteratorColumn": "ID",
+                      "password": "123!!!",
+                      "port": "1521",
+                      "pollingInterval": "30",
+                      "query": "SELECT t1.ID, t1.INSERTATION_TIME, t1.FIRST_NAME, t2.LAST_NAME FROM test_data t1 JOIN test_data2 t2 ON t1.ID = t2.ID",
+                      "username": "system",
+                      "dbDriver": "ojdbc10",
+                      "connectionType": "SERVICE_NAME",
+                      "connection": "XEPDB1"
+                    }
+                  }
+                },
+                "QRadar creation": {
+                  "description": "Create QRadar collector using `type` property = `QRadar`. `coreId` must be defined.\nIf `authType` is `LOGIN`, `token` property must be `null`.\nIf `authType` is `TOKEN`, `token` property must be defined instead of `login` and `password`.\n",
+                  "summary": "QRadar",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My QRadar Collector",
+                    "type": "QRadar",
+                    "settings": {
+                      "host": "12.23.32.45",
+                      "authType": "LOGIN",
+                      "token": null,
+                      "username": "admin",
+                      "password": "123!!!",
+                      "customColumns": [
+                        "qa"
+                      ],
+                      "port": 8089,
+                      "protocol": "https",
+                      "fetchStartTimestamp": "2024-06-05T10:41:31Z"
+                    }
+                  }
+                },
+                "Splunk creation": {
+                  "description": "Create Splunk collector using `type` property = `Splunk`. `coreId` must be defined.\nIf `authType` is `LOGIN`, `token` property must be `null`.\nIf `authType` is `TOKEN`, `token` property must be defined instead of `login` and `password`.\n",
+                  "summary": "Splunk",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My Splunk Collector",
+                    "type": "Splunk",
+                    "settings": {
+                      "authType": "LOGIN",
+                      "eventType": "plain",
+                      "host": "10.70.0.3",
+                      "login": "admin",
+                      "password": "123!!!",
+                      "port": 8089,
+                      "protocol": "https",
+                      "pollingInterval": 300,
+                      "query": "search *",
+                      "tls": "TLSv1_2",
+                      "token": null
+                    }
+                  }
+                },
+                "Syslog creation": {
+                  "description": "Create Syslog collector using `type` property = `Syslog`. `coreId` must be defined.\n",
+                  "summary": "Syslog",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "name": "My Syslog Collector",
+                    "type": "Syslog",
+                    "settings": {
+                      "certificate": "some/path",
+                      "port": 123,
+                      "protocol": "http"
+                    }
+                  }
+                },
+                "Windows creation": {
+                  "description": "Create Windows collector using `type` property = `Windows`. `coreId` and `templateIds` must be defined.\nWindows collector must be created via executing installation script on the Windows VM where you want to install the collector.\n",
+                  "summary": "Windows",
+                  "value": {
+                    "coreId": "35a77781-78a0-4896-81a4-d2d684c46ebf",
+                    "type": "Windows",
+                    "templateIds": [
+                      "030cee78-c95a-4121-8fd3-867a40e8e3b8",
+                      "d80cee78-c95a-3426-8fd3-867a40e8e35e"
+                    ]
+                  }
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCollectorExternalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Create Collector response": {
+                    "description": "Create Collector response",
+                    "value": "{\n     \"id\": \"4a4f1a40-f458-4569-b5f0-4768eda5cdad\",\n     \"name\": \"Collector Name\",\n     \"type\": \"Ldap\",\n     \"status\": \"UPDATING\",\n     \"settings\": {\n         \"port\": 3268,\n         \"primaryHost\": \"127.5.2.1\",\n         \"secondaryHosts\": [\n             \"127.0.0.2\",\n             \"127.0.0.3\"\n         ],\n         \"ssl\": false,\n         \"globalCatalog\": false,\n         \"baseDn\": \"DC=acme, DC=local\",\n         \"bindDn\": \"DC=acme, DC=local\",\n         \"pullFullContext\": false,\n         \"pollingInterval\": 300\n     },\n     \"coreId\": \"093615b8-73f2-4ee0-a770-41ae6cd39126\",\n     \"coreName\": \"Core Name\",\n     \"heartbeat\": {},\n }\n"
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateCollectorExternalResponse"
+                }
+              }
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Update a Site Collector agent",
+        "tags": [
+          "Agents"
+        ]
+      }
+    },
+    "/site-collectors/v1/collectors/{collectorId}/delete": {
+      "put": {
+        "description": "Permanently remove an agent collector by its Collector ID. This will uninstall the collector and remove it from the application registry and host system.",
+        "operationId": "site-collectors-agent-delete",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collectorId",
+            "description": "Site Collector agent ID. To retrieve the ID, see [Get a list of Site Collector agents](site-collectors-agent-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "4a4f1a40-f458-4569-b5f0-4768eda5cdad"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Delete a Site Collector agent",
+        "tags": [
+          "Agents"
+        ]
+      }
+    },
+    "/site-collectors/v1/collectors/{collectorId}/restart": {
+      "put": {
+        "description": "Restart or start an existing agent collector by its Collector ID.",
+        "operationId": "site-collector-agent-restart",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collectorId",
+            "description": "Site Collector agent ID. To retrieve the ID, see [Get a list of Site Collector agents](site-collectors-agent-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "4a4f1a40-f458-4569-b5f0-4768eda5cdad"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Restart a Site Collector agent",
+        "tags": [
+          "Agents"
+        ]
+      }
+    },
+    "/site-collectors/v1/collectors/{collectorId}/stop": {
+      "put": {
+        "description": "Stop an existing agent collector by its Collector ID. Before restarting an agent collector, you must first stop the Site Collector core.",
+        "operationId": "site-collectors-agent-stop",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collectorId",
+            "description": "Site Collector agent ID. To retrieve the ID, see [Get a list of Site Collector agents](site-collectors-agent-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "4a4f1a40-f458-4569-b5f0-4768eda5cdad"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Stop a Site Collector agent",
+        "tags": [
+          "Agents"
+        ]
+      }
+    },
+    "/site-collectors/v1/collectors/{collectorId}/upgrade": {
+      "put": {
+        "description": "Update an agent collector to the most recent product version by its Collector ID. If the upgrade process is unsuccessful, the agent will automatically revert back to its original version.",
+        "operationId": "site-collectors-agent-upgrade",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "collectorId",
+            "description": "Site Collector agent ID. To retrieve the ID, see [Get a list of Site Collector agents](site-collectors-agent-get-list).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "4a4f1a40-f458-4569-b5f0-4768eda5cdad"
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {}
+            },
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Upgrade a Site Collector agent",
+        "tags": [
+          "Agents"
+        ]
+      }
+    },
+    "/site-collectors/v1/templates": {
+      "post": {
+        "description": "Create a new Site Collector template for a specific collector type to rapidly deploy multiple agent collectors. For each template, you define all log collection parameters depending on the collector type (Windows, File etc). After you create the template, use the Template ID for further collector management operations.",
+        "operationId": "site-collector-template-create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplateExternalRequest"
+              },
+              "examples": {
+                "ArchiveLinux Template creation": {
+                  "summary": "ArchiveLinux",
+                  "description": "ArchiveLinux Template creation",
+                  "value": {
+                    "name": "My ArchiveLinux Template",
+                    "type": "ArchiveLinux",
+                    "settings": {
+                      "includePaths": [
+                        "/home/exabeam/ngsc_qa/gz_files/*.gz",
+                        "/home/exabeam/ngsc_qa/zip_files/*.zip",
+                        "/home/exabeam/ngsc_qa/tar_files/*.tar"
+                      ],
+                      "excludePaths": [
+                        "/home/exabeam/ngsc_qa/*.csv",
+                        "/home/exabeam/ngsc_qa/*.log",
+                        "/home/exabeam/ngsc_qa/*.txt"
+                      ]
+                    }
+                  }
+                },
+                "ArchiveWindows Template creation": {
+                  "summary": "ArchiveWindows",
+                  "description": "ArchiveWindows Template creation",
+                  "value": {
+                    "name": "New template_arch2",
+                    "type": "ArchiveWindows",
+                    "settings": {
+                      "includePaths": [
+                        "C:\\Users\\exabeam\\*.tar"
+                      ]
+                    }
+                  }
+                },
+                "FileLinux Template creation": {
+                  "summary": "FileLinux",
+                  "description": "FileLinux Template creation",
+                  "value": {
+                    "name": "My FileLinux Template",
+                    "type": "FileLinux",
+                    "settings": {
+                      "includePaths": [
+                        "/home/exabeam/*.txt",
+                        "/home/exabeam/*.log",
+                        "/home/exabeam/*.csv"
+                      ],
+                      "excludePaths": [
+                        "/home/exabeam/*.exe",
+                        "/home/exabeam/*.jar",
+                        "/home/exabeam/*.zip"
+                      ]
+                    }
+                  }
+                },
+                "FileWindows Template creation": {
+                  "summary": "FileWindows",
+                  "description": "FileWindows Template creation",
+                  "value": {
+                    "name": "My FileWindows Template",
+                    "type": "FileWindows",
+                    "settings": {
+                      "includePaths": [
+                        "C:\\users\\exabeam\\ngsc_qa\\csv_files\\*.csv",
+                        "C:\\users\\exabeam\\ngsc_qa\\log_files\\*.log",
+                        "C:\\users\\exabeam\\ngsc_qa\\txt_files\\*.txt"
+                      ],
+                      "excludePaths": [
+                        "C:\\users\\exabeam\\ngsc_qa\\gz_files\\*.gz",
+                        "C:\\users\\exabeam\\ngsc_qa\\tar_files\\*.tar",
+                        "C:\\users\\exabeam\\ngsc_qa\\zip_files\\*.zip"
+                      ]
+                    }
+                  }
+                },
+                "Windows Template creation": {
+                  "summary": "Windows",
+                  "description": "Windows Template creation",
+                  "value": {
+                    "name": "My Windows Template",
+                    "type": "Windows",
+                    "settings": {
+                      "categories": [
+                        {
+                          "name": "Application",
+                          "consumeRange": "all"
+                        }
+                      ],
+                      "messageFormat": "Both",
+                      "inactivePolicy": "24h"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateExternalResponse"
+                },
+                "examples": {
+                  "ArchiveLinux Template response": {
+                    "description": "ArchiveLinux Template response",
+                    "value": {
+                      "id": "1093e9c7-c63a-4827-855b-f7bfcea8af88",
+                      "name": "My ArchiveLinux Template",
+                      "type": "ArchiveLinux",
+                      "settings": {
+                        "includePaths": [
+                          "/home/exabeam/ngsc_qa/gz_files/*.gz",
+                          "/home/exabeam/ngsc_qa/zip_files/*.zip",
+                          "/home/exabeam/ngsc_qa/tar_files/*.tar"
+                        ],
+                        "excludePaths": [
+                          "/home/exabeam/ngsc_qa/*.csv",
+                          "/home/exabeam/ngsc_qa/*.log",
+                          "/home/exabeam/ngsc_qa/*.txt"
+                        ]
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2023-07-09T09:53:57Z",
+                      "modifiedDate": "2023-07-09T09:53:57Z"
+                    }
+                  },
+                  "ArchiveWindows Template response": {
+                    "description": "ArchiveWindows Template response",
+                    "value": {
+                      "id": "0b2c4c7b-a321-41de-ace6-c1390cec1399",
+                      "name": "New ArchiveWindows Template",
+                      "type": "ArchiveWindows",
+                      "settings": {
+                        "includePaths": [
+                          "C:\\Users\\exabeam\\*.tar"
+                        ]
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2024-03-14T07:53:55Z",
+                      "modifiedDate": "2024-03-14T07:53:55Z"
+                    }
+                  },
+                  "FileLinux Template response": {
+                    "description": "FileLinux Template response",
+                    "value": {
+                      "id": "f1a0eff7-fe85-4769-b77e-f9404057c8a0",
+                      "name": "My FileLinux Template",
+                      "type": "FileLinux",
+                      "settings": {
+                        "includePaths": [
+                          "/home/exabeam/*.txt",
+                          "/home/exabeam/*.log",
+                          "/home/exabeam/*.csv"
+                        ],
+                        "excludePaths": [
+                          "/home/exabeam/*.exe",
+                          "/home/exabeam/*.jar",
+                          "/home/exabeam/*.zip"
+                        ]
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2024-06-06T09:56:52Z",
+                      "modifiedDate": "2024-06-06T09:56:52Z"
+                    }
+                  },
+                  "FileWindows Template response": {
+                    "description": "FileWindows Template response",
+                    "value": {
+                      "id": "6f709bac-9909-45be-a557-9745ea1a02bc",
+                      "name": "My FileWindows Template",
+                      "type": "FileWindows",
+                      "settings": {
+                        "includePaths": [
+                          "C:\\users\\exabeam\\ngsc_qa\\csv_files\\*.csv",
+                          "C:\\users\\exabeam\\ngsc_qa\\log_files\\*.log",
+                          "C:\\users\\exabeam\\ngsc_qa\\txt_files\\*.txt"
+                        ],
+                        "excludePaths": [
+                          "C:\\users\\exabeam\\ngsc_qa\\gz_files\\*.gz",
+                          "C:\\users\\exabeam\\ngsc_qa\\tar_files\\*.tar",
+                          "C:\\users\\exabeam\\ngsc_qa\\zip_files\\*.zip"
+                        ]
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2023-07-09T09:55:00Z",
+                      "modifiedDate": "2023-07-09T09:55:00Z"
+                    }
+                  },
+                  "Windows Template response": {
+                    "description": "Windows Template response",
+                    "value": {
+                      "id": "068839d5-b439-414a-ae9f-91807864f04f",
+                      "name": "Application-All",
+                      "type": "Windows",
+                      "settings": {
+                        "categories": [
+                          {
+                            "name": "Application",
+                            "consumeRange": "all"
+                          }
+                        ],
+                        "messageFormat": "Both",
+                        "inactivePolicy": "24h"
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2024-03-06T14:25:14Z",
+                      "modifiedDate": "2024-03-06T14:25:14Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Create a new Site Collector template",
+        "tags": [
+          "Templates"
+        ]
+      },
+      "get": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Retrieve all the templates.",
+        "description": "Retrieve the log collection attributes and configuration values of the templates.",
+        "operationId": "site-collector-template-get-list",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TemplateExternalResponse"
+                  }
+                },
+                "examples": {
+                  "List Of Templates": {
+                    "description": "List of different types of templates",
+                    "value": [
+                      {
+                        "id": "1093e9c7-c63a-4827-855b-f7bfcea8af88",
+                        "name": "My ArchiveLinux Template",
+                        "type": "ArchiveLinux",
+                        "settings": {
+                          "includePaths": [
+                            "/home/exabeam/ngsc_qa/gz_files/*.gz",
+                            "/home/exabeam/ngsc_qa/zip_files/*.zip",
+                            "/home/exabeam/ngsc_qa/tar_files/*.tar"
+                          ],
+                          "excludePaths": [
+                            "/home/exabeam/ngsc_qa/*.csv",
+                            "/home/exabeam/ngsc_qa/*.log",
+                            "/home/exabeam/ngsc_qa/*.txt"
+                          ]
+                        },
+                        "collectorsCount": 0,
+                        "createdDate": "2023-07-09T09:53:57Z",
+                        "modifiedDate": "2023-07-09T09:53:57Z"
+                      },
+                      {
+                        "id": "0b2c4c7b-a321-41de-ace6-c1390cec1399",
+                        "name": "New ArchiveWindows Template",
+                        "type": "ArchiveWindows",
+                        "settings": {
+                          "includePaths": [
+                            "C:\\Users\\exabeam\\*.tar"
+                          ]
+                        },
+                        "collectorsCount": 0,
+                        "createdDate": "2024-03-14T07:53:55Z",
+                        "modifiedDate": "2024-03-14T07:53:55Z"
+                      },
+                      {
+                        "id": "f1a0eff7-fe85-4769-b77e-f9404057c8a0",
+                        "name": "My FileLinux Template",
+                        "type": "FileLinux",
+                        "settings": {
+                          "includePaths": [
+                            "/home/exabeam/*.txt",
+                            "/home/exabeam/*.log",
+                            "/home/exabeam/*.csv"
+                          ],
+                          "excludePaths": [
+                            "/home/exabeam/*.exe",
+                            "/home/exabeam/*.jar",
+                            "/home/exabeam/*.zip"
+                          ]
+                        },
+                        "collectorsCount": 0,
+                        "createdDate": "2024-06-06T09:56:52Z",
+                        "modifiedDate": "2024-06-06T09:56:52Z"
+                      },
+                      {
+                        "id": "6f709bac-9909-45be-a557-9745ea1a02bc",
+                        "name": "My FileWindows Template",
+                        "type": "FileWindows",
+                        "settings": {
+                          "includePaths": [
+                            "C:\\users\\exabeam\\ngsc_qa\\csv_files\\*.csv",
+                            "C:\\users\\exabeam\\ngsc_qa\\log_files\\*.log",
+                            "C:\\users\\exabeam\\ngsc_qa\\txt_files\\*.txt"
+                          ],
+                          "excludePaths": [
+                            "C:\\users\\exabeam\\ngsc_qa\\gz_files\\*.gz",
+                            "C:\\users\\exabeam\\ngsc_qa\\tar_files\\*.tar",
+                            "C:\\users\\exabeam\\ngsc_qa\\zip_files\\*.zip"
+                          ]
+                        },
+                        "collectorsCount": 0,
+                        "createdDate": "2023-07-09T09:55:00Z",
+                        "modifiedDate": "2023-07-09T09:55:00Z"
+                      },
+                      {
+                        "id": "068839d5-b439-414a-ae9f-91807864f04f",
+                        "name": "Application-All",
+                        "type": "Windows",
+                        "settings": {
+                          "categories": [
+                            {
+                              "name": "Application",
+                              "consumeRange": "all"
+                            }
+                          ],
+                          "messageFormat": "Both",
+                          "inactivePolicy": "24h"
+                        },
+                        "collectorsCount": 0,
+                        "createdDate": "2024-03-06T14:25:14Z",
+                        "modifiedDate": "2024-03-06T14:25:14Z"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/site-collectors/v1/templates/{templateId}": {
+      "get": {
+        "tags": [
+          "Templates"
+        ],
+        "summary": "Retrieve the configuration for a Site Collector agent by template ID",
+        "description": "Retrieve the log collection attributes and configuration values of a template with a given template ID.",
+        "operationId": "site-collector-template-get-details",
+        "parameters": [
+          {
+            "name": "templateId",
+            "description": "Site Collector template ID. This ID is returned when you [Create a new Site Collector template](site-collector-template-create).",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "example": "030cee78-c95a-4121-8fd3-867a40e8e3b8"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateExternalResponse"
+                },
+                "examples": {
+                  "ArchiveLinux Template response": {
+                    "description": "ArchiveLinux Template response",
+                    "value": {
+                      "id": "1093e9c7-c63a-4827-855b-f7bfcea8af88",
+                      "name": "My ArchiveLinux Template",
+                      "type": "ArchiveLinux",
+                      "settings": {
+                        "includePaths": [
+                          "/home/exabeam/ngsc_qa/gz_files/*.gz",
+                          "/home/exabeam/ngsc_qa/zip_files/*.zip",
+                          "/home/exabeam/ngsc_qa/tar_files/*.tar"
+                        ],
+                        "excludePaths": [
+                          "/home/exabeam/ngsc_qa/*.csv",
+                          "/home/exabeam/ngsc_qa/*.log",
+                          "/home/exabeam/ngsc_qa/*.txt"
+                        ]
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2023-07-09T09:53:57Z",
+                      "modifiedDate": "2023-07-09T09:53:57Z"
+                    }
+                  },
+                  "ArchiveWindows Template response": {
+                    "description": "ArchiveWindows Template response",
+                    "value": {
+                      "id": "0b2c4c7b-a321-41de-ace6-c1390cec1399",
+                      "name": "New ArchiveWindows Template",
+                      "type": "ArchiveWindows",
+                      "settings": {
+                        "includePaths": [
+                          "C:\\Users\\exabeam\\*.tar"
+                        ]
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2024-03-14T07:53:55Z",
+                      "modifiedDate": "2024-03-14T07:53:55Z"
+                    }
+                  },
+                  "FileLinux Template response": {
+                    "description": "FileLinux Template response",
+                    "value": {
+                      "id": "f1a0eff7-fe85-4769-b77e-f9404057c8a0",
+                      "name": "My FileLinux Template",
+                      "type": "FileLinux",
+                      "settings": {
+                        "includePaths": [
+                          "/home/exabeam/*.txt",
+                          "/home/exabeam/*.log",
+                          "/home/exabeam/*.csv"
+                        ],
+                        "excludePaths": [
+                          "/home/exabeam/*.exe",
+                          "/home/exabeam/*.jar",
+                          "/home/exabeam/*.zip"
+                        ]
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2024-06-06T09:56:52Z",
+                      "modifiedDate": "2024-06-06T09:56:52Z"
+                    }
+                  },
+                  "FileWindows Template response": {
+                    "description": "FileWindows Template response",
+                    "value": {
+                      "id": "6f709bac-9909-45be-a557-9745ea1a02bc",
+                      "name": "My FileWindows Template",
+                      "type": "FileWindows",
+                      "settings": {
+                        "includePaths": [
+                          "C:\\users\\exabeam\\ngsc_qa\\csv_files\\*.csv",
+                          "C:\\users\\exabeam\\ngsc_qa\\log_files\\*.log",
+                          "C:\\users\\exabeam\\ngsc_qa\\txt_files\\*.txt"
+                        ],
+                        "excludePaths": [
+                          "C:\\users\\exabeam\\ngsc_qa\\gz_files\\*.gz",
+                          "C:\\users\\exabeam\\ngsc_qa\\tar_files\\*.tar",
+                          "C:\\users\\exabeam\\ngsc_qa\\zip_files\\*.zip"
+                        ]
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2023-07-09T09:55:00Z",
+                      "modifiedDate": "2023-07-09T09:55:00Z"
+                    }
+                  },
+                  "Windows Template response": {
+                    "description": "Windows Template response",
+                    "value": {
+                      "id": "068839d5-b439-414a-ae9f-91807864f04f",
+                      "name": "Application-All",
+                      "type": "Windows",
+                      "settings": {
+                        "categories": [
+                          {
+                            "name": "Application",
+                            "consumeRange": "all"
+                          }
+                        ],
+                        "messageFormat": "Both",
+                        "inactivePolicy": "24h"
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2024-03-06T14:25:14Z",
+                      "modifiedDate": "2024-03-06T14:25:14Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      },
+      "put": {
+        "description": "Update an existing template for a Site Collector agent by its template\nID with all log collection configurations depending on its type\n(`Windows`, `File` etc).\n\n**Template Update Notice**\n\n- Modifying a template affects all collectors that use it.\n- Expect delays in template propagation to all affected collectors. As a guideline, it may take approximately 5 minutes for every 20 collectors per Site Collector instance.\n- Collectors under Site Collector instances that are in an error state will not be updated automatically. These collectors will require a manual update once the Site Collector instance is restored to `RUNNING`.\n",
+        "operationId": "site-collector-template-update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "templateId",
+            "description": "Site Collector template ID. This ID is returned when you [Create a new Site Collector template](site-collector-template-create).",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "ArchiveLinux Template creation": {
+                  "summary": "ArchiveLinux",
+                  "description": "ArchiveLinux Template creation",
+                  "value": {
+                    "name": "My ArchiveLinux Template",
+                    "type": "ArchiveLinux",
+                    "settings": {
+                      "includePaths": [
+                        "/home/exabeam/ngsc_qa/gz_files/*.gz",
+                        "/home/exabeam/ngsc_qa/zip_files/*.zip",
+                        "/home/exabeam/ngsc_qa/tar_files/*.tar"
+                      ],
+                      "excludePaths": [
+                        "/home/exabeam/ngsc_qa/*.csv",
+                        "/home/exabeam/ngsc_qa/*.log",
+                        "/home/exabeam/ngsc_qa/*.txt"
+                      ]
+                    }
+                  }
+                },
+                "ArchiveWindows Template creation": {
+                  "summary": "ArchiveWindows",
+                  "description": "ArchiveWindows Template creation",
+                  "value": {
+                    "name": "New template_arch2",
+                    "type": "ArchiveWindows",
+                    "settings": {
+                      "includePaths": [
+                        "C:\\Users\\exabeam\\*.tar"
+                      ]
+                    }
+                  }
+                },
+                "FileLinux Template creation": {
+                  "summary": "FileLinux",
+                  "description": "FileLinux Template creation",
+                  "value": {
+                    "name": "My FileLinux Template",
+                    "type": "FileLinux",
+                    "settings": {
+                      "includePaths": [
+                        "/home/exabeam/*.txt",
+                        "/home/exabeam/*.log",
+                        "/home/exabeam/*.csv"
+                      ],
+                      "excludePaths": [
+                        "/home/exabeam/*.exe",
+                        "/home/exabeam/*.jar",
+                        "/home/exabeam/*.zip"
+                      ]
+                    }
+                  }
+                },
+                "FileWindows Template creation": {
+                  "summary": "FileWindows",
+                  "description": "FileWindows Template creation",
+                  "value": {
+                    "name": "My FileWindows Template",
+                    "type": "FileWindows",
+                    "settings": {
+                      "includePaths": [
+                        "C:\\users\\exabeam\\ngsc_qa\\csv_files\\*.csv",
+                        "C:\\users\\exabeam\\ngsc_qa\\log_files\\*.log",
+                        "C:\\users\\exabeam\\ngsc_qa\\txt_files\\*.txt"
+                      ],
+                      "excludePaths": [
+                        "C:\\users\\exabeam\\ngsc_qa\\gz_files\\*.gz",
+                        "C:\\users\\exabeam\\ngsc_qa\\tar_files\\*.tar",
+                        "C:\\users\\exabeam\\ngsc_qa\\zip_files\\*.zip"
+                      ]
+                    }
+                  }
+                },
+                "Windows Template creation": {
+                  "summary": "Windows",
+                  "description": "Windows Template creation",
+                  "value": {
+                    "name": "My Windows Template",
+                    "type": "Windows",
+                    "settings": {
+                      "categories": [
+                        {
+                          "name": "Application",
+                          "consumeRange": "all"
+                        }
+                      ],
+                      "messageFormat": "Both",
+                      "inactivePolicy": "24h"
+                    }
+                  }
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/TemplateExternalRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TemplateExternalResponse"
+                },
+                "examples": {
+                  "ArchiveLinux Template response": {
+                    "description": "ArchiveLinux Template response",
+                    "value": {
+                      "id": "1093e9c7-c63a-4827-855b-f7bfcea8af88",
+                      "name": "My ArchiveLinux Template",
+                      "type": "ArchiveLinux",
+                      "settings": {
+                        "includePaths": [
+                          "/home/exabeam/ngsc_qa/gz_files/*.gz",
+                          "/home/exabeam/ngsc_qa/zip_files/*.zip",
+                          "/home/exabeam/ngsc_qa/tar_files/*.tar"
+                        ],
+                        "excludePaths": [
+                          "/home/exabeam/ngsc_qa/*.csv",
+                          "/home/exabeam/ngsc_qa/*.log",
+                          "/home/exabeam/ngsc_qa/*.txt"
+                        ]
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2023-07-09T09:53:57Z",
+                      "modifiedDate": "2023-07-09T09:53:57Z"
+                    }
+                  },
+                  "ArchiveWindows Template response": {
+                    "description": "ArchiveWindows Template response",
+                    "value": {
+                      "id": "0b2c4c7b-a321-41de-ace6-c1390cec1399",
+                      "name": "New ArchiveWindows Template",
+                      "type": "ArchiveWindows",
+                      "settings": {
+                        "includePaths": [
+                          "C:\\Users\\exabeam\\*.tar"
+                        ]
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2024-03-14T07:53:55Z",
+                      "modifiedDate": "2024-03-14T07:53:55Z"
+                    }
+                  },
+                  "FileLinux Template response": {
+                    "description": "FileLinux Template response",
+                    "value": {
+                      "id": "f1a0eff7-fe85-4769-b77e-f9404057c8a0",
+                      "name": "My FileLinux Template",
+                      "type": "FileLinux",
+                      "settings": {
+                        "includePaths": [
+                          "/home/exabeam/*.txt",
+                          "/home/exabeam/*.log",
+                          "/home/exabeam/*.csv"
+                        ],
+                        "excludePaths": [
+                          "/home/exabeam/*.exe",
+                          "/home/exabeam/*.jar",
+                          "/home/exabeam/*.zip"
+                        ]
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2024-06-06T09:56:52Z",
+                      "modifiedDate": "2024-06-06T09:56:52Z"
+                    }
+                  },
+                  "FileWindows Template response": {
+                    "description": "FileWindows Template response",
+                    "value": {
+                      "id": "6f709bac-9909-45be-a557-9745ea1a02bc",
+                      "name": "My FileWindows Template",
+                      "type": "FileWindows",
+                      "settings": {
+                        "includePaths": [
+                          "C:\\users\\exabeam\\ngsc_qa\\csv_files\\*.csv",
+                          "C:\\users\\exabeam\\ngsc_qa\\log_files\\*.log",
+                          "C:\\users\\exabeam\\ngsc_qa\\txt_files\\*.txt"
+                        ],
+                        "excludePaths": [
+                          "C:\\users\\exabeam\\ngsc_qa\\gz_files\\*.gz",
+                          "C:\\users\\exabeam\\ngsc_qa\\tar_files\\*.tar",
+                          "C:\\users\\exabeam\\ngsc_qa\\zip_files\\*.zip"
+                        ]
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2023-07-09T09:55:00Z",
+                      "modifiedDate": "2023-07-09T09:55:00Z"
+                    }
+                  },
+                  "Windows Template response": {
+                    "description": "Windows Template response",
+                    "value": {
+                      "id": "068839d5-b439-414a-ae9f-91807864f04f",
+                      "name": "Application-All",
+                      "type": "Windows",
+                      "settings": {
+                        "categories": [
+                          {
+                            "name": "Application",
+                            "consumeRange": "all"
+                          }
+                        ],
+                        "messageFormat": "Both",
+                        "inactivePolicy": "24h"
+                      },
+                      "collectorsCount": 0,
+                      "createdDate": "2024-03-06T14:25:14Z",
+                      "modifiedDate": "2024-03-06T14:25:14Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "406": {
+            "$ref": "#/components/responses/406"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        },
+        "summary": "Update a Site Collector template",
+        "tags": [
+          "Templates"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "CoreExternalResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the Site Collector Core."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the Site Collector Core."
+          },
+          "deploymentHosts": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "A unique array of strings representing the deployment hosts.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "egressFilter": {
+            "$ref": "#/components/schemas/EgressFilter"
+          },
+          "proxy": {
+            "$ref": "#/components/schemas/SiteCollectorProxyResponse"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "RUNNING",
+              "HEARTBEAT_ERROR",
+              "INSTALLING",
+              "INSTALLED",
+              "INSTALLATION_ERROR",
+              "RESTARTING",
+              "RESTARTED",
+              "RESTART_ERROR",
+              "STOPPING",
+              "STOPPED",
+              "STOP_ERROR",
+              "UNINSTALLING",
+              "UNINSTALLED",
+              "UNINSTALLATION_ERROR",
+              "UPGRADING",
+              "UPGRADED",
+              "UPGRADE_ERROR",
+              "UPDATING",
+              "UPDATED",
+              "UPDATE_ERROR"
+            ],
+            "description": "The current status of the Site Collector Core response, indicating various stages and errors."
+          },
+          "collectorsCount": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The number of collectors associated with the Site Collector Core."
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the Site Collector Core was created (ISO-8601 format)."
+          },
+          "modifiedDate": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the Site Collector Core was last modified (ISO-8601 format)."
+          },
+          "heartbeat": {
+            "$ref": "#/components/schemas/HeartbeatExternalResponse"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/Metadata"
+          },
+          "currentVersion": {
+            "type": "string",
+            "description": "The current version of the Site Collector Core."
+          },
+          "latestVersion": {
+            "type": "string",
+            "description": "The latest version of the Site Collector Core available for installation."
+          },
+          "latestVersions": {
+            "$ref": "#/components/schemas/LatestVersion"
+          },
+          "operationSystem": {
+            "$ref": "#/components/schemas/OperationSystem"
+          },
+          "systemConfiguration": {
+            "$ref": "#/components/schemas/SystemConfiguration"
+          },
+          "supportPackageStatus": {
+            "type": "string",
+            "description": "The status of the support package associated with the Site Collector Core.",
+            "enum": [
+              "NEW",
+              "PENDING",
+              "COMPLETED",
+              "FAILED"
+            ]
+          },
+          "installationPath": {
+            "type": "string",
+            "description": "The path where the Site Collector Core is installed."
+          },
+          "extractionPath": {
+            "type": "string",
+            "description": "The path where the Site Collector Core files are extracted."
+          }
+        }
+      },
+      "EgressFilter": {
+        "type": "object",
+        "properties": {
+          "allowConditions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of Java regular expressions (regex) that specify the log data results to include."
+          },
+          "denyConditions": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of Java regular expressions (regex) that specify the log data results to exclude."
+          }
+        }
+      },
+      "ErrorExternalMessage": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "The error message."
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The timestamp when the error occurred, in milliseconds since the epoch."
+          }
+        }
+      },
+      "HeartbeatExternalResponse": {
+        "description": "The heartbeat information associated with the Site Collector Core or Agent Collectors.",
+        "type": "object",
+        "properties": {
+          "errorMessages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorExternalMessage"
+            },
+            "description": "An array of error messages related to the heartbeat."
+          },
+          "timestamp": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The timestamp of the heartbeat, in milliseconds since the epoch."
+          }
+        }
+      },
+      "LatestVersion": {
+        "type": "object",
+        "description": "This object includes the latest versions of other related entities, for example MSI and File Collector.",
+        "properties": {
+          "msi": {
+            "type": "string",
+            "description": "The latest MSI version available."
+          },
+          "windowsFile": {
+            "type": "string",
+            "description": "The latest Windows file available."
+          },
+          "linuxFile": {
+            "type": "string",
+            "description": "The latest Linux file available."
+          },
+          "windowsArchive": {
+            "type": "string",
+            "description": "The latest Windows archive available."
+          },
+          "linuxArchive": {
+            "type": "string",
+            "description": "The latest Linux archive available."
+          }
+        }
+      },
+      "Metadata": {
+        "description": "Metadata information related to the Site Collector Core.",
+        "type": "object",
+        "properties": {
+          "siteId": {
+            "type": "string",
+            "description": "The unique identifier for the site."
+          },
+          "sitename": {
+            "type": "string",
+            "description": "The name of the site."
+          },
+          "timezoneOffset": {
+            "type": "string",
+            "description": "The timezone offset for the site."
+          },
+          "timezoneName": {
+            "type": "string",
+            "description": "The name of the timezone for the site."
+          }
+        }
+      },
+      "OperationSystem": {
+        "type": "object",
+        "description": "The operating system on which the Site Collector Core is installed.",
+        "properties": {
+          "ipAddress": {
+            "type": "string",
+            "description": "The IP address of the operating system."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the operating system."
+          },
+          "version": {
+            "type": "string",
+            "description": "The version of the operating system."
+          }
+        }
+      },
+      "ProxyAuthResponse": {
+        "type": "object",
+        "description": "The authentication credentials for the Site Collector proxy.",
+        "properties": {
+          "user": {
+            "type": "string",
+            "description": "The username for proxy authentication."
+          }
+        }
+      },
+      "SiteCollectorProxyResponse": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "description": "The host name of the Site Collector proxy."
+          },
+          "port": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The port number of the Site Collector proxy."
+          },
+          "protocol": {
+            "type": "string",
+            "description": "The protocol used by the Site Collector proxy."
+          },
+          "credentials": {
+            "$ref": "#/components/schemas/ProxyAuthResponse"
+          }
+        }
+      },
+      "SystemConfiguration": {
+        "type": "object",
+        "description": "System configuration details for the Site Collector Core.",
+        "properties": {
+          "cpu": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The number of CPU cores allocated."
+          },
+          "memory": {
+            "type": "string",
+            "description": "The amount of memory allocated, typically specified in GB."
+          }
+        }
+      },
+      "CoreExternalUpdateRequest": {
+        "required": [
+          "deploymentHosts",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 50,
+            "minLength": 2,
+            "type": "string",
+            "description": "Name of the new Site Collector instance."
+          },
+          "deploymentHosts": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Hostname or IP address of the VM on which you want to install the Site Collector Core. List of hosts is reserved for future clustered installations. A single value in the list is required for example, `vm-sc-core-1`.",
+            "items": {
+              "type": "string",
+              "description": "Hostname or IP address of the VM on which you want to install the Site Collector Core. List of hosts is reserved for future clustered installations. A single value in the list is required for example, `vm-sc-core-1`."
+            }
+          },
+          "egressFilter": {
+            "$ref": "#/components/schemas/EgressFilterExternalRequest"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataExternalRequest"
+          },
+          "installationPath": {
+            "type": "string",
+            "description": "Enter the path of the custom Installation folder that you created for Site Collector Core installation, operations, and upgrade. The default path for the Installation folder is **/opt**.",
+            "example": "/opt"
+          },
+          "extractionPath": {
+            "type": "string",
+            "description": "Specify the custom directory path for downloading temporary files generated during the Site Collector Core package extraction and installation process. By default, extracted files are downloaded to the **/tmp** directory.",
+            "example": "/tmp"
+          }
+        }
+      },
+      "CoreExternalRequest": {
+        "required": [
+          "deploymentHosts",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 50,
+            "minLength": 2,
+            "type": "string",
+            "description": "Name of the new Site Collector instance."
+          },
+          "deploymentHosts": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "Hostname or IP address of the VM on which you want to install the Site Collector Core. List of hosts is reserved for future clustered installations. A single value in the list is required for example, `vm-sc-core-1`.",
+            "items": {
+              "type": "string",
+              "description": "Hostname or IP address of the VM on which you want to install the Site Collector Core. List of hosts is reserved for future clustered installations. A single value in the list is required for example, `vm-sc-core-1`."
+            }
+          },
+          "egressFilter": {
+            "$ref": "#/components/schemas/EgressFilterExternalRequest"
+          },
+          "proxy": {
+            "$ref": "#/components/schemas/CoreProxyExternalRequest"
+          },
+          "metadata": {
+            "$ref": "#/components/schemas/MetadataExternalRequest"
+          },
+          "installationPath": {
+            "type": "string",
+            "description": "Enter the path of the custom Installation folder that you created for Site Collector Core installation, operations, and upgrade. The default path for the Installation folder is **/opt**.",
+            "example": "/opt"
+          },
+          "extractionPath": {
+            "type": "string",
+            "description": "Specify the custom directory path for downloading temporary files generated during the Site Collector Core package extraction and installation process. By default, extracted files are downloaded to the **/tmp** directory.",
+            "example": "/tmp"
+          }
+        }
+      },
+      "CoreProxyExternalRequest": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string",
+            "description": "Hostname or IP address of the proxy VM on which the Site Collector Core establishes a connection with the proxy server."
+          },
+          "port": {
+            "type": "integer",
+            "description": "Port of the proxy on which the Site Collector Core establishes a connection with the proxy server.",
+            "format": "int32"
+          }
+        },
+        "description": "A set of properties that describe proxy configuration through which Site Collector Core connects to the Exabeam Security Operations Platform."
+      },
+      "EgressFilterExternalRequest": {
+        "type": "object",
+        "properties": {
+          "allowConditions": {
+            "type": "array",
+            "description": "Use this parameter to include log data that matches one or more Java regular expressions (regex) and exclude anything that doesn't match. For example, if you want to identify logs containing an EventCode with the pattern `100` followed by any digit, such as `1001` or `1002`, use the regex pattern `\"EventCode=100[0-9]\"`. The Site Collector treats multiple conditions as an OR operation, requiring the log data to satisfy any specified conditions before the filter is applied. After the condition is applied, the Site Collector forwards the log data that meets the criteria to the Exabeam Security Operations Platform. If the condition is not met, the system filters out the data at the Site Collector Core.",
+            "items": {
+              "type": "string",
+              "description": "Use this parameter to include log data that matches one or more Java regular expressions (regex) and exclude anything that doesn't match. For example, if you want to identify logs containing an EventCode with the pattern `100` followed by any digit, such as `1001` or `1002`, use the regex pattern `\"EventCode=100[0-9]\"`. The Site Collector treats multiple conditions as an OR operation, requiring the log data to satisfy any specified conditions before the filter is applied. After the condition is applied, the Site Collector forwards the log data that meets the criteria to the Exabeam Security Operations Platform. If the condition is not met, the system filters out the data at the Site Collector Core."
+            }
+          },
+          "denyConditions": {
+            "type": "array",
+            "description": "Use this parameter to include all log data except for those that match one or more Java regular expressions (regex). The parameter operates as a filter where log data matching the conditions will be excluded. For example, if you want to exclude logs containing an EventType between `1` and `5`, you would use the regex pattern `\"EventType=[1-5]\"`. Multiple deny conditions operate on a logical OR basis, meaning that log data matching any of the specified conditions will be filtered out. After this deny condition is applied, the Site Collector forwards the log data that does not match the criteria to the Exabeam Security Operations Platform. If the deny conditions are met, the Site Collector filters out the matching data.",
+            "items": {
+              "type": "string",
+              "description": "Use this parameter to include all log data except for those that match one or more Java regular expressions (regex). The parameter operates as a filter where log data matching the conditions will be excluded. For example, if you want to exclude logs containing an EventType between `1` and `5`, you would use the regex pattern `\"EventType=[1-5]\"`. Multiple deny conditions operate on a logical OR basis, meaning that log data matching any of the specified conditions will be filtered out. After this deny condition is applied, the Site Collector forwards the log data that does not match the criteria to the Exabeam Security Operations Platform. If the deny conditions are met, the Site Collector filters out the matching data."
+            }
+          }
+        },
+        "description": "An array which contains arrays with allow and deny conditions to apply to any ingested log data."
+      },
+      "MetadataExternalRequest": {
+        "type": "object",
+        "properties": {
+          "sitename": {
+            "type": "string",
+            "description": "Enter a site name to ensure efficient management of environments with overlapping IP addresses."
+          },
+          "timezoneOffset": {
+            "type": "string",
+            "description": "Override the default UTC time zone offset. The time zone offset that you set is used for converting the timestamps on the logs. For example, `+0530`."
+          },
+          "timezoneName": {
+            "type": "string",
+            "description": "Override the default UTC time zone. The time zone name is used on the user interface and the time zone offset that you set is used for converting the timestamps on the logs. For example, `San-Francisco`, California."
+          }
+        },
+        "description": "A set of properties that add additional context to the log messages for the Site Collector Core before the log messages reach the Exabeam Security Operations Platform."
+      },
+      "PageDecorator": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "description": "An array of objects representing the individual items in the collection."
+            }
+          },
+          "paging": {
+            "$ref": "#/components/schemas/Paging"
+          }
+        }
+      },
+      "Paging": {
+        "type": "object",
+        "description": "An object containing paging information for navigating through the collection of results.",
+        "properties": {
+          "next": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of strings representing the URLs to the next set of results."
+          },
+          "prev": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of strings representing the URLs to the previous set of results."
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The maximum number of results to be returned per page."
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The starting point within the collection of results for the current page."
+          },
+          "pages": {
+            "type": "integer",
+            "format": "int32",
+            "description": "The total number of pages available based on the current limit and count."
+          },
+          "count": {
+            "type": "integer",
+            "format": "int64",
+            "description": "The total number of results available in the collection."
+          }
+        }
+      },
+      "CoreInstallationLogExternalResponse": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Installation status message."
+          },
+          "createdDate": {
+            "type": "string",
+            "description": "Date of the installation log message entry (ISO-8601 format).",
+            "format": "date-time"
+          }
+        }
+      },
+      "CoreInstallationCommandExternalResponse": {
+        "type": "object",
+        "properties": {
+          "installationCommand": {
+            "type": "string",
+            "description": "Before installing individual collectors to receive logs, you must retrieve the installation command  to install the Site Collector Core on a virtual machine (VM). To access this command, you must provide  the Core ID. The command is encoded in base64, necessitating a decoding step. This encoding ensures  the command's integrity during transmission, maintaining its format and preventing alterations. For  example, after you receive the response, you can decode the string using the following command:   `base64 -d <<< \"c3Vkb...............\"` After decoding the command from base64 to its original string format, you'll have the necessary shell  commands for the installation process. The command sequence serves several purposes. Initially, it  terminates any ongoing installation sessions to prevent conflicts and it initiates a new background  session named `ngsc_install`, specifically for installing the Site Collector Core. Within this session,  it performs a series of operations including setting environment variables, downloading and executing  an installation script via a curled URL with authorization, and ensuring the session's output is logged  into a uniquely named file for future reference. This comprehensive approach ensures a smooth and  transparent installation of the Site Collector Core, setting the stage for the addition of individual  collectors."
+          },
+          "installationCommandFormat": {
+            "type": "string",
+            "description": "Format used to encode the installation command, which is base64."
+          }
+        }
+      },
+      "TemplateCollectorsType": {
+        "description": "Type of Site Collector agent for which the template applies.",
+        "enum": [
+          "ArchiveLinux",
+          "ArchiveWindows",
+          "FileLinux",
+          "FileWindows",
+          "Windows"
+        ],
+        "type": "string"
+      },
+      "NonTemplateCollectorsType": {
+        "description": "Type of Site Collector agent.",
+        "enum": [
+          "EStreamer",
+          "Fortinet",
+          "Kafka",
+          "Ldap",
+          "MSSQL",
+          "MySQL",
+          "OpenLdap",
+          "Oracle",
+          "QRadar",
+          "Splunk",
+          "Syslog"
+        ],
+        "type": "string"
+      },
+      "CollectorStatus": {
+        "description": "Status of the Site Collector agent.",
+        "enum": [
+          "RUNNING",
+          "RUNNING_ERROR",
+          "HEARTBEAT_ERROR",
+          "SETTING_UP",
+          "SETUP",
+          "SETUP_ERROR",
+          "UPDATING",
+          "UPDATED",
+          "UPDATE_ERROR",
+          "STOPPING",
+          "STOPPED",
+          "STOP_ERROR",
+          "RESTARTING",
+          "RESTARTED",
+          "RESTART_ERROR",
+          "DELETING",
+          "DELETED",
+          "DELETE_ERROR",
+          "UPGRADING",
+          "UPGRADED",
+          "UPGRADE_ERROR"
+        ],
+        "type": "string"
+      },
+      "CollectorExternalRequest": {
+        "required": [
+          "coreId",
+          "name",
+          "settings",
+          "type"
+        ],
+        "properties": {
+          "coreId": {
+            "description": "ID for the Site Collector Core.",
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "description": "Name of the Site Collector agent.",
+            "maxLength": 255,
+            "minLength": 2,
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/NonTemplateCollectorsType"
+          },
+          "settings": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/EStreamer_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Fortinet_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Kafka_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Ldap_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/MSSQL_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/MySQL_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/OpenLdap_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Oracle_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/QRadar_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Splunk_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Syslog_Settings"
+              }
+            ],
+            "description": "A set of attributes to configure for the Site Collector agent. Note that some attributes are relevant only for certain Collector types."
+          }
+        },
+        "type": "object"
+      },
+      "CollectorExternalResponse": {
+        "properties": {
+          "coreId": {
+            "type": "string",
+            "description": "ID of the Site Collector Core.",
+            "format": "uuid"
+          },
+          "coreName": {
+            "description": "Name of the Site Collector Core.",
+            "type": "string"
+          },
+          "heartbeat": {
+            "$ref": "#/components/schemas/HeartbeatExternalResponse"
+          },
+          "id": {
+            "description": "ID of the Site Collector agent.",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the Site Collector agent.",
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/NonTemplateCollectorsType"
+          },
+          "settings": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/EStreamer_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Fortinet_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Kafka_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Ldap_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/MSSQL_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/MySQL_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/OpenLdap_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Oracle_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/QRadar_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Splunk_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Syslog_Settings"
+              }
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/CollectorStatus"
+          },
+          "statusMessage": {
+            "type": "string",
+            "description": "Message associated with the status of the Site Collector agent."
+          },
+          "version": {
+            "type": "string",
+            "description": "Site Collector agent version."
+          }
+        },
+        "type": "object"
+      },
+      "UpdateCollectorExternalRequest": {
+        "required": [
+          "coreId",
+          "name",
+          "settings",
+          "type"
+        ],
+        "properties": {
+          "coreId": {
+            "description": "ID for the Site Collector Core.",
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "description": "Name of the Site Collector agent.",
+            "maxLength": 255,
+            "minLength": 2,
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "ArchiveLinux",
+              "ArchiveWindows",
+              "EStreamer",
+              "FileLinux",
+              "FileWindows",
+              "Fortinet",
+              "Kafka",
+              "Ldap",
+              "MSSQL",
+              "MySQL",
+              "OpenLdap",
+              "Oracle",
+              "QRadar",
+              "Splunk",
+              "Syslog",
+              "Windows"
+            ],
+            "type": "string"
+          },
+          "settings": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/EStreamer_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/FileLinux_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/FileWindows_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Fortinet_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Kafka_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Ldap_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/MSSQL_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/MySQL_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/OpenLdap_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Oracle_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/QRadar_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Splunk_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Syslog_Settings"
+              }
+            ],
+            "description": "A set of attributes to configure for the Site Collector agent. Note that some attributes are relevant only for certain Collector types."
+          },
+          "templateIds": {
+            "description": "You can assign multiple Template IDs to any agent collector (`ArchiveLinux`, `ArchiveWindows`, `FileLinux`, `FileWindows` and `Windows`).",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "type": "array"
+          }
+        },
+        "type": "object"
+      },
+      "UpdateCollectorExternalResponse": {
+        "properties": {
+          "coreId": {
+            "type": "string",
+            "description": "ID of the Site Collector Core.",
+            "format": "uuid"
+          },
+          "coreName": {
+            "description": "Name of the Site Collector Core.",
+            "type": "string"
+          },
+          "heartbeat": {
+            "$ref": "#/components/schemas/HeartbeatExternalResponse"
+          },
+          "id": {
+            "description": "ID of the Site Collector agent.",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the Site Collector agent.",
+            "type": "string"
+          },
+          "type": {
+            "enum": [
+              "ArchiveLinux",
+              "ArchiveWindows",
+              "EStreamer",
+              "FileLinux",
+              "FileWindows",
+              "Fortinet",
+              "Kafka",
+              "Ldap",
+              "MSSQL",
+              "MySQL",
+              "OpenLdap",
+              "Oracle",
+              "QRadar",
+              "Splunk",
+              "Syslog",
+              "Windows"
+            ],
+            "type": "string"
+          },
+          "settings": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ArchiveLinux_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/ArchiveWindows_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/EStreamer_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/FileLinux_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/FileWindows_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Fortinet_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Kafka_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Ldap_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/MSSQL_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/MySQL_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/OpenLdap_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Oracle_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/QRadar_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Splunk_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Syslog_Settings"
+              },
+              {
+                "$ref": "#/components/schemas/Windows_Settings"
+              }
+            ]
+          },
+          "status": {
+            "$ref": "#/components/schemas/CollectorStatus"
+          },
+          "statusMessage": {
+            "type": "string",
+            "description": "Message associated with the status of the Site Collector agent."
+          },
+          "version": {
+            "type": "string",
+            "description": "Site Collector agent version."
+          }
+        },
+        "type": "object"
+      },
+      "NonTemplateCollectorExternalSettings": {
+        "type": "object",
+        "description": "A set of attributes to configure for the Site Collector agent. Note that some"
+      },
+      "Ldap_Settings": {
+        "required": [
+          "baseDn",
+          "bindDn",
+          "bindPassword",
+          "pollingInterval",
+          "port",
+          "primaryHost"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NonTemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "primaryHost": {
+                "type": "string"
+              },
+              "secondaryHosts": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "port": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "ssl": {
+                "type": "boolean"
+              },
+              "globalCatalog": {
+                "type": "boolean"
+              },
+              "baseDn": {
+                "type": "string"
+              },
+              "bindDn": {
+                "type": "string"
+              },
+              "bindPassword": {
+                "type": "string",
+                "writeOnly": true
+              },
+              "pullFullContext": {
+                "type": "boolean"
+              },
+              "pollingInterval": {
+                "type": "integer",
+                "format": "int32",
+                "enum": [
+                  30,
+                  60,
+                  120,
+                  180,
+                  240,
+                  300
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "OpenLdap_Settings": {
+        "required": [
+          "baseDn",
+          "bindDn",
+          "bindPassword",
+          "pollingInterval",
+          "port",
+          "primaryHost"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NonTemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "primaryHost": {
+                "type": "string"
+              },
+              "secondaryHosts": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "port": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "ssl": {
+                "type": "boolean"
+              },
+              "globalCatalog": {
+                "type": "boolean"
+              },
+              "baseDn": {
+                "type": "string"
+              },
+              "bindDn": {
+                "type": "string"
+              },
+              "bindPassword": {
+                "type": "string",
+                "writeOnly": true
+              },
+              "pullFullContext": {
+                "type": "boolean"
+              },
+              "pollingInterval": {
+                "type": "integer",
+                "format": "int32",
+                "enum": [
+                  30,
+                  60,
+                  120,
+                  180,
+                  240,
+                  300
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "MSSQL_Settings": {
+        "required": [
+          "database",
+          "host",
+          "iteratorColumn",
+          "password",
+          "pollingInterval",
+          "port",
+          "query",
+          "username"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NonTemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "pollingInterval": {
+                "type": "integer",
+                "format": "int32",
+                "enum": [
+                  30,
+                  60,
+                  120,
+                  180,
+                  240,
+                  300
+                ]
+              },
+              "host": {
+                "type": "string"
+              },
+              "database": {
+                "type": "string"
+              },
+              "port": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "iteratorColumn": {
+                "type": "string"
+              },
+              "initialValue": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string",
+                "writeOnly": true
+              },
+              "sslEncryption": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      },
+      "Multiline": {
+        "type": "object",
+        "properties": {
+          "head": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tail": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "headRegex": {
+            "type": "string"
+          },
+          "tailRegex": {
+            "type": "string"
+          }
+        }
+      },
+      "MySQL_Settings": {
+        "required": [
+          "database",
+          "host",
+          "iteratorColumn",
+          "password",
+          "pollingInterval",
+          "port",
+          "query",
+          "username"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NonTemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "pollingInterval": {
+                "type": "integer",
+                "format": "int32",
+                "enum": [
+                  30,
+                  60,
+                  120,
+                  180,
+                  240,
+                  300
+                ]
+              },
+              "host": {
+                "type": "string"
+              },
+              "database": {
+                "type": "string"
+              },
+              "port": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "iteratorColumn": {
+                "type": "string"
+              },
+              "initialValue": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string",
+                "writeOnly": true
+              }
+            }
+          }
+        ]
+      },
+      "Oracle_Settings": {
+        "required": [
+          "connection",
+          "connectionType",
+          "dbDriver",
+          "host",
+          "iteratorColumn",
+          "password",
+          "pollingInterval",
+          "port",
+          "query",
+          "username"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NonTemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "pollingInterval": {
+                "type": "integer",
+                "format": "int32",
+                "enum": [
+                  30,
+                  60,
+                  120,
+                  180,
+                  240,
+                  300
+                ]
+              },
+              "host": {
+                "type": "string"
+              },
+              "connectionType": {
+                "type": "string",
+                "enum": [
+                  "SERVICE_NAME",
+                  "SID"
+                ]
+              },
+              "connection": {
+                "type": "string"
+              },
+              "port": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "iteratorColumn": {
+                "type": "string"
+              },
+              "initialValue": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string",
+                "writeOnly": true
+              },
+              "dbDriver": {
+                "type": "string",
+                "enum": [
+                  "ojdbc6",
+                  "ojdbc7",
+                  "ojdbc8",
+                  "ojdbc10",
+                  "ojdbc11"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "Splunk_Settings": {
+        "required": [
+          "host",
+          "authType",
+          "port",
+          "protocol",
+          "tls",
+          "eventType",
+          "query",
+          "pollingInterval"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NonTemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string"
+              },
+              "authType": {
+                "type": "string",
+                "enum": [
+                  "TOKEN",
+                  "LOGIN"
+                ]
+              },
+              "token": {
+                "type": "string"
+              },
+              "port": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "login": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string",
+                "writeOnly": true
+              },
+              "protocol": {
+                "type": "string"
+              },
+              "tls": {
+                "type": "string"
+              },
+              "eventType": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              },
+              "pollingInterval": {
+                "description": "Specifies the interval, in seconds, at which the system repeatedly fetches data.",
+                "type": "integer",
+                "format": "int32",
+                "enum": [
+                  30,
+                  60,
+                  120,
+                  180,
+                  240,
+                  300,
+                  900,
+                  1800,
+                  2700,
+                  3600
+                ]
+              },
+              "fetchStartTimestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Timestamp to start fetching the logs (ISO-8601 format).",
+                "example": "2024-06-05T10:41:31Z"
+              }
+            }
+          }
+        ]
+      },
+      "Syslog_Settings": {
+        "required": [
+          "port",
+          "protocol"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NonTemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "protocol": {
+                "type": "string",
+                "enum": [
+                  "HTTP",
+                  "HTTPS",
+                  "UDP",
+                  "TCP",
+                  "TLS"
+                ]
+              },
+              "port": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "securedConnection": {
+                "type": "boolean"
+              },
+              "tls": {
+                "type": "string"
+              },
+              "multiLine": {
+                "$ref": "#/components/schemas/Multiline"
+              },
+              "customCertificate": {
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      },
+      "Fortinet_Settings": {
+        "required": [
+          "protocol",
+          "port",
+          "tls"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NonTemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "protocol": {
+                "type": "string",
+                "enum": [
+                  "TCP",
+                  "TLS"
+                ]
+              },
+              "port": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "securedConnection": {
+                "type": "boolean"
+              },
+              "customCertificate": {
+                "type": "boolean"
+              },
+              "tls": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "QRadar_Settings": {
+        "required": [
+          "host",
+          "authType",
+          "customColumns",
+          "fetchStartTimestamp"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NonTemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "host": {
+                "type": "string"
+              },
+              "authType": {
+                "type": "string",
+                "enum": [
+                  "TOKEN",
+                  "LOGIN"
+                ]
+              },
+              "token": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string",
+                "writeOnly": true
+              },
+              "customColumns": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "whereClause": {
+                "type": "string"
+              },
+              "fetchStartTimestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Timestamp to start fetching the logs (ISO-8601 format).",
+                "example": "2024-06-05T10:41:31Z"
+              }
+            }
+          }
+        ]
+      },
+      "Broker": {
+        "type": "object",
+        "properties": {
+          "host": {
+            "type": "string"
+          },
+          "port": {
+            "type": "string"
+          }
+        }
+      },
+      "Kafka_Settings": {
+        "required": [
+          "brokers",
+          "topics"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NonTemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "brokers": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Broker"
+                }
+              },
+              "protocol": {
+                "type": "string",
+                "enum": [
+                  "PLAINTEXT",
+                  "SASL"
+                ]
+              },
+              "topics": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "saslMechanism": {
+                "type": "string",
+                "enum": [
+                  "PLAIN",
+                  "SCRAM-SHA-256",
+                  "SCRAM-SHA-512"
+                ]
+              },
+              "saslUsername": {
+                "type": "string"
+              },
+              "saslPassword": {
+                "type": "string",
+                "writeOnly": true
+              }
+            }
+          }
+        ]
+      },
+      "EStreamer_Settings": {
+        "required": [
+          "port",
+          "host",
+          "fetchStartTimestamp",
+          "tls"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/NonTemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "port": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "host": {
+                "type": "string"
+              },
+              "certificatePassword": {
+                "type": "string",
+                "writeOnly": true
+              },
+              "fetchStartTimestamp": {
+                "type": "string",
+                "format": "date-time",
+                "description": "Timestamp to start fetching the logs (ISO-8601 format).",
+                "example": "2024-06-05T10:41:31Z"
+              },
+              "tls": {
+                "type": "string"
+              },
+              "exclude": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "TemplateCollectorExternalSettings": {
+        "type": "object",
+        "description": "A set of attributes to configure for the Site Collector agent. Note that some attributes are relevant only for certain Collector types."
+      },
+      "Windows_Settings": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "fetchStartDate": {
+                "format": "date-time",
+                "type": "string",
+                "description": "Timestamp to start fetching the logs (ISO-8601 format).",
+                "example": "2024-06-05T10:41:31Z"
+              },
+              "hostIp": {
+                "type": "string",
+                "example": "10.70.32.17"
+              }
+            }
+          }
+        ]
+      },
+      "FileWindows_Settings": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "fetchHistoricalData": {
+                "description": "This flag is only applicable for Core version 2.3.0 or higher.  For Core versions lower than 2.3.0, this flag will always be set to `true`.",
+                "type": "boolean",
+                "example": true
+              }
+            }
+          }
+        ]
+      },
+      "ArchiveWindows_Settings": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "cpu": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "memory": {
+                "type": "string"
+              },
+              "hostIp": {
+                "type": "string",
+                "example": "10.70.32.17"
+              }
+            }
+          }
+        ]
+      },
+      "FileLinux_Settings": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "fetchHistoricalData": {
+                "description": "This flag is only applicable for Core version 2.3.0 or higher.  For Core versions lower than 2.3.0, this flag will always be set to `true`.",
+                "type": "boolean",
+                "example": true
+              }
+            }
+          }
+        ]
+      },
+      "ArchiveLinux_Settings": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TemplateCollectorExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "cpu": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "memory": {
+                "type": "string"
+              },
+              "hostIp": {
+                "type": "string",
+                "example": "10.70.32.17"
+              }
+            }
+          }
+        ]
+      },
+      "CollectorInstallationCommandExternalRequest": {
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/TemplateCollectorsType"
+          },
+          "deploymentHosts": {
+            "description": "Hostname or IP address of the Site Collector Core for which you want to install the agent.",
+            "items": {
+              "description": "One or more hostnames or IP addresses of the Site Collector Core for which you want to install the agent.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "startLogDate": {
+            "description": "(Windows collectors only) The date after which you want the Site Collector agent to receive logs (ISO-8601 format).",
+            "format": "date-time",
+            "type": "string",
+            "example": "2024-06-05T10:41:31Z"
+          },
+          "fetchHistoricalData": {
+            "description": "(`FileWindows` and `FileLinux` only) This flag is only applicable for Core version 2.3.0 or higher.  For Core versions lower than 2.3.0, this flag will always be set to `true`.",
+            "type": "boolean",
+            "example": true
+          },
+          "templateIds": {
+            "description": "You can assign multiple Template IDs to any collector.",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "example": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "type",
+          "deploymentHosts",
+          "templateIds"
+        ],
+        "type": "object"
+      },
+      "CollectorUninstallationCommandExternalRequest": {
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/TemplateCollectorsType"
+          },
+          "deploymentHosts": {
+            "description": "One or more Hostnames or IP addresses of the Site Collector Core where the agent is installed.",
+            "items": {
+              "description": "One or more Hostnames or IP addresses of the Site Collector Core where the agent is installed.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "collectorId": {
+            "description": "The UUID of the agent for which you want to generate the command.  While it is not mandatory, providing the agent id is recommended to ensure the correct command is generated.",
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "type",
+          "deploymentHosts"
+        ],
+        "type": "object"
+      },
+      "CollectorSupportPackageCommandExternalRequest": {
+        "properties": {
+          "type": {
+            "$ref": "#/components/schemas/TemplateCollectorsType"
+          },
+          "deploymentHosts": {
+            "description": "One or more Hostnames or IP addresses of the Site Collector Core where the agent is installed.",
+            "items": {
+              "description": "One or more Hostnames or IP addresses of the Site Collector Core where the agent is installed.",
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "collectorId": {
+            "description": "The UUID of the agent for which you want to generate the command.  While it is not mandatory, providing the agent id is recommended to ensure the correct command is generated.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "type",
+          "deploymentHosts"
+        ],
+        "type": "object"
+      },
+      "TemplateExternalRequest": {
+        "properties": {
+          "name": {
+            "description": "The name you want to assign to the Site Collector template.",
+            "maxLength": 50,
+            "minLength": 2,
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/TemplateCollectorsType"
+          },
+          "settings": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Archive_Template"
+              },
+              {
+                "$ref": "#/components/schemas/File_Template"
+              },
+              {
+                "$ref": "#/components/schemas/Windows_Template"
+              }
+            ],
+            "description": "A set of attributes to configure for the template. Note that some attributes are relevant only for certain Collector types. For the `ArchiveLinux`, `ArchiveWindows`, `FileLinux`,  and `FileWindows` templates, the total number of included and excluded paths should not exceed 300."
+          }
+        },
+        "required": [
+          "name",
+          "settings",
+          "type"
+        ],
+        "type": "object"
+      },
+      "TemplateExternalResponse": {
+        "properties": {
+          "id": {
+            "description": "Template ID.",
+            "type": "string"
+          },
+          "name": {
+            "description": "Name of the template.",
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/TemplateCollectorsType"
+          },
+          "collectorsCount": {
+            "description": "Number of collectors to which the template applies.",
+            "format": "int32",
+            "type": "integer"
+          },
+          "createdDate": {
+            "description": "Date at which the template was created.",
+            "format": "int64",
+            "type": "integer"
+          },
+          "modifiedDate": {
+            "description": "Date at which the template was modified.",
+            "format": "int64",
+            "type": "integer"
+          },
+          "settings": {
+            "$ref": "#/components/schemas/TemplateExternalSettings"
+          }
+        }
+      },
+      "Archive_Template": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TemplateExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "includePaths": {
+                "type": "array",
+                "description": "An array of log file paths to be included in the log collection. For example, use `/opt/example/*.log` for Unix or `C:\\\\Directory1\\\\*.log` for Windows.",
+                "items": {
+                  "type": "string",
+                  "description": "An array of log file paths to be included in the log collection. For example, use `/opt/example/*.log` for Unix or `C:\\\\Directory1\\\\*.log` for Windows."
+                }
+              },
+              "excludePaths": {
+                "type": "array",
+                "description": "An array of log file paths to be excluded from the log collection. Examples include `/opt/example/*.gz` for Unix or `C:\\\\Directory2\\\\*.csv` for Windows.",
+                "items": {
+                  "type": "string",
+                  "description": "An array of log file paths to be excluded from the log collection. Examples include `/opt/example/*.gz` for Unix or `C:\\\\Directory2\\\\*.csv` for Windows."
+                }
+              }
+            }
+          }
+        ]
+      },
+      "File_Template": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TemplateExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "includePaths": {
+                "type": "array",
+                "description": "An array of log file paths to be included in the log collection. For example, use `/opt/example/*.log` for Unix or `C:\\\\Directory1\\\\*.log` for Windows.",
+                "items": {
+                  "type": "string",
+                  "description": "An array of log file paths to be included in the log collection. For example, use `/opt/example/*.log` for Unix or `C:\\\\Directory1\\\\*.log` for Windows."
+                }
+              },
+              "excludePaths": {
+                "type": "array",
+                "description": "An array of log file paths to be excluded from the log collection. Examples include `/opt/example/*.gz` for Unix or `C:\\\\Directory2\\\\*.csv` for Windows.",
+                "items": {
+                  "type": "string",
+                  "description": "An array of log file paths to be excluded from the log collection. Examples include `/opt/example/*.gz` for Unix or `C:\\\\Directory2\\\\*.csv` for Windows."
+                }
+              }
+            }
+          }
+        ]
+      },
+      "TemplateExternalSettings": {
+        "type": "object",
+        "description": "A set of attributes to configure for the template. Note that some attributes are relevant only for certain Collector types."
+      },
+      "WindowsTemplateCategoryExternal": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Windows Log Name from the source system (e.g., `Active Directory Web Services`). The Log Name must match at least one Windows source. If there are no matches, collection will fail."
+          },
+          "consumeRange": {
+            "type": "string",
+            "description": "Defines which events to collect for a specified Windows Log Name by event ID. Accepts a single event ID (e.g., `4240`), a range (e.g., `4220 - 4300`), or `all`. Cannot be used simultaneously with `excludeRange`."
+          },
+          "excludeRange": {
+            "type": "string",
+            "description": "Defines which events to exclude for a specified Windows Log Name. All other event IDs will be collected. Accepts a single event ID (e.g., `4240`) or a range (e.g., `4220 - 4300`). Cannot be used simultaneously with `consumeRange`."
+          }
+        },
+        "description": "An array of log names and their associated inclusion or exclusion ranges."
+      },
+      "WindowsTemplateExternalAdvanceConfiguration": {
+        "description": "Windows Template Advanced Configuration allows you to apply various adjustments to the configuration in order to improve performance by match their hardware and network capabilities.",
+        "type": "object",
+        "properties": {
+          "batchCommitSize": {
+            "type": "integer",
+            "description": "Batch Commit Size: Number of events (default 1000) bundled before sending; lower values increase EPS but also disk IOPS.",
+            "default": 1000
+          },
+          "eventBatchReadSize": {
+            "type": "integer",
+            "description": "Event Batch Read Size: Number of events (default 100) fetched per query; higher values increase EPS and reduce disk IOPS but use more memory.",
+            "default": 100
+          },
+          "substitutePercentageItems": {
+            "type": "boolean",
+            "description": "Substitute Percentage Items: If true, replaces %% placeholders in XML with readable text; improves data clarity but reduces EPS due to high CPU usage.",
+            "default": true
+          },
+          "sidLookup": {
+            "type": "boolean",
+            "description": "SID Lookup: If true, translates Security Identifiers to readable strings; improves clarity but lowers EPS due to expensive operations.",
+            "default": true
+          },
+          "cacheSid": {
+            "type": "boolean",
+            "description": "Cache SID: If true, caches SID lookups to boost performance; increases memory usage and only applies when SID lookup is enabled.",
+            "default": true
+          }
+        }
+      },
+      "Windows_Template": {
+        "required": [
+          "categories"
+        ],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/TemplateExternalSettings"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "categories": {
+                "type": "array",
+                "description": "An array of log names and their associated inclusion or exclusion ranges.",
+                "items": {
+                  "$ref": "#/components/schemas/WindowsTemplateCategoryExternal"
+                }
+              },
+              "messageFormat": {
+                "type": "string",
+                "description": "(Windows Collectors only) Windows message format: `Plaintext`, `XML`, or `Both`.",
+                "enum": [
+                  "Both",
+                  "XML",
+                  "Plaintext"
+                ]
+              },
+              "inactivePolicy": {
+                "type": "string"
+              },
+              "advanceConfiguration": {
+                "$ref": "#/components/schemas/WindowsTemplateExternalAdvanceConfiguration"
+              }
+            }
+          }
+        ]
+      },
+      "NgscError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code"
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message"
+          },
+          "messageParams": {
+            "type": "object",
+            "description": "Error message parameters",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "fields": {
+            "type": "array",
+            "description": "Error message fields",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "NgscHttpError": {
+        "type": "object",
+        "properties": {
+          "traceId": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/NgscError"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "oAuth2ClientCredentials": {
+        "type": "oauth2",
+        "description": "Manage your Site Collector instances.",
+        "flows": {
+          "clientCredentials": {
+            "tokenUrl": "auth/v1/token",
+            "scopes": {}
+          }
+        }
+      }
+    },
+    "responses": {
+      "400": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NgscHttpError"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NgscHttpError"
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Permission Denied",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NgscHttpError"
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NgscHttpError"
+            }
+          }
+        }
+      },
+      "406": {
+        "description": "Not Acceptable",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NgscHttpError"
+            }
+          }
+        }
+      },
+      "500": {
+        "description": "Internal Server Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/NgscHttpError"
+            }
+          }
+        }
+      }
+    }
+  }
+}

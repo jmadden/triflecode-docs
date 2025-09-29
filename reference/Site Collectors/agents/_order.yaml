@@ -1,0 +1,11 @@
+- site-collectors-agent-get-list
+- site-collectors-agent-create
+- site-collectors-agent-get-installation-command
+- site-collectors-agent-get-uninstallation-command
+- site-collectors-agent-get-support-package-command
+- site-collectors-agent-get-details
+- site-collectors-agent-update
+- site-collectors-agent-delete
+- site-collector-agent-restart
+- site-collectors-agent-stop
+- site-collectors-agent-upgrade
