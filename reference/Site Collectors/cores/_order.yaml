@@ -1,11 +1,1 @@
-- site-collector-core-get-all
-- site-collector-create-new-instance
-- site-collector-core-get-list
-- site-collector-core-update
-- site-collector-core-upgrade
-- site-collector-core-uninstall
-- site-collector-core-stop
-- site-collector-core-restart
-- site-collector-core-get-install-logs
-- site-collector-core-install
-- site-collector-core-download-certificate
+[]
