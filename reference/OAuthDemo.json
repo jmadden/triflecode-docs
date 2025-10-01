@@ -22,6 +22,24 @@
     ]
   },
   "jsonSchemaDialect": "https://json-schema.org/draft/2020-12/schema",
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "OAuth 2.0 token issuance and related flows."
+    },
+    {
+      "name": "Profile",
+      "description": "User profile endpoints."
+    },
+    {
+      "name": "Widgets",
+      "description": "Create, read, and manage widgets."
+    },
+    {
+      "name": "Admin",
+      "description": "Administrative and reporting endpoints."
+    }
+  ],
   "components": {
     "securitySchemes": {
       "OAuth2": {
@@ -96,6 +114,10 @@
   "paths": {
     "/oauth/token": {
       "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "operationId": "issueAccessToken",
         "summary": "Token endpoint",
         "description": "OAuth 2.0 token endpoint for authorization_code, client_credentials, and refresh_token.",
         "requestBody": {
@@ -194,6 +216,10 @@
     },
     "/me": {
       "get": {
+        "tags": [
+          "Profile"
+        ],
+        "operationId": "getCurrentUserProfile",
         "summary": "Get current user profile",
         "description": "Requires a user token obtained via Authorization Code flow.",
         "security": [
@@ -243,6 +269,10 @@
     },
     "/widgets": {
       "get": {
+        "tags": [
+          "Widgets"
+        ],
+        "operationId": "listWidgets",
         "summary": "List widgets",
         "description": "Available to any token with read:widgets (user tokens or client credentials).",
         "responses": {
@@ -265,6 +295,10 @@
         }
       },
       "post": {
+        "tags": [
+          "Widgets"
+        ],
+        "operationId": "createWidget",
         "summary": "Create a widget",
         "description": "Requires write:widgets. Typically a user token via Authorization Code.",
         "security": [
@@ -310,6 +344,10 @@
     },
     "/admin/reports/daily": {
       "get": {
+        "tags": [
+          "Admin"
+        ],
+        "operationId": "getAdminDailyReport",
         "summary": "Admin daily report",
         "description": "Service-to-service call. Client Credentials only with widgets:admin.",
         "security": [

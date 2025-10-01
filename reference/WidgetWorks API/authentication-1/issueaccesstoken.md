@@ -5,6 +5,6 @@ excerpt: >-
   refresh_token.
 api:
   file: OAuthDemo.json
-  operationId: post_oauth-token
+  operationId: issueAccessToken
 hidden: false
 ---
