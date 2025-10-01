@@ -28,8 +28,8 @@
       "description": "OAuth 2.0 token issuance and related flows."
     },
     {
-      "name": "Profile",
-      "description": "User profile endpoints."
+      "name": "Users",
+      "description": "User-related endpoints."
     },
     {
       "name": "Widgets",
@@ -37,7 +37,27 @@
     },
     {
       "name": "Admin",
-      "description": "Administrative and reporting endpoints."
+      "description": "Administrative endpoints and controls."
+    },
+    {
+      "name": "Reports",
+      "description": "Reporting endpoints (usually under Admin)."
+    },
+    {
+      "name": "Profile",
+      "description": "User profile endpoints."
+    },
+    {
+      "name": "Token",
+      "description": "Token handling endpoints."
+    },
+    {
+      "name": "Read",
+      "description": "Read/list operations."
+    },
+    {
+      "name": "Write",
+      "description": "Create/update operations."
     }
   ],
   "components": {
@@ -114,6 +134,10 @@
   "paths": {
     "/oauth/token": {
       "post": {
+        "x-tags": [
+          "Authentication",
+          "Token"
+        ],
         "tags": [
           "Authentication"
         ],
@@ -216,8 +240,12 @@
     },
     "/me": {
       "get": {
-        "tags": [
+        "x-tags": [
+          "Users",
           "Profile"
+        ],
+        "tags": [
+          "Users"
         ],
         "operationId": "getCurrentUserProfile",
         "summary": "Get current user profile",
@@ -269,6 +297,10 @@
     },
     "/widgets": {
       "get": {
+        "x-tags": [
+          "Widgets",
+          "Read"
+        ],
         "tags": [
           "Widgets"
         ],
@@ -295,6 +327,10 @@
         }
       },
       "post": {
+        "x-tags": [
+          "Widgets",
+          "Write"
+        ],
         "tags": [
           "Widgets"
         ],
@@ -344,8 +380,12 @@
     },
     "/admin/reports/daily": {
       "get": {
+        "x-tags": [
+          "Admin",
+          "Reports"
+        ],
         "tags": [
-          "Admin / Reports / Daily"
+          "Admin"
         ],
         "operationId": "getAdminDailyReport",
         "summary": "Admin daily report",
