@@ -1,6 +1,6 @@
 ---
 title: MCP
-hidden: true
+hidden: false
 ---
 The Triflecode Docs Model Context Protocol (MCP) server enables AI-powered code editors like Cursor and Windsurf, plus general-purpose tools like Claude Desktop, to interact directly with your Triflecode Docs API and documentation.
 
