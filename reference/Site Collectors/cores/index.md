@@ -1,4 +1,0 @@
----
-title: Cores
-hidden: false
----
