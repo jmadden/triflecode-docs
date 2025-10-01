@@ -345,7 +345,7 @@
     "/admin/reports/daily": {
       "get": {
         "tags": [
-          "Admin"
+          "Admin / Reports / Daily"
         ],
         "operationId": "getAdminDailyReport",
         "summary": "Admin daily report",
