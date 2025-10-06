@@ -1,0 +1,10 @@
+- getcontext-managementv1tables
+- postcontext-managementv1tables
+- getcontext-managementv1tablesid
+- deletecontext-managementv1tablesid
+- getcontext-managementv1tablesuploadstatustrackerid
+- getcontext-managementv1attributescontexttype
+- getcontext-managementv1tablesidrecords
+- postcontext-managementv1tablesidaddrecordsfromcsv
+- postcontext-managementv1tablesidaddrecords
+- deletecontext-managementv1tablesiddeleterecords
